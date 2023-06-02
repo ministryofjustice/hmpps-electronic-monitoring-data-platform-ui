@@ -5,10 +5,6 @@
 {% set pageTitle = applicationName + " - Home" %}
 {% set mainClasses = "app-container govuk-body" %}
 
-{% block beforeContent %}
-  {{ govukBackLink({ href: "/", text: "Back" }) }}
-{% endblock %}
-
 {% set rows = [] %}
 
 {% for deviceWearer in deviceWearers %}
@@ -26,11 +22,14 @@
         text: deviceWearer.type
       },
       {
-        html: '<a href="/device-wearer/' + deviceWearer.deviceWearerId + '">View</a>'
+        html: '<a href="/device-wearers/' + deviceWearer.deviceWearerId + '">View</a>'
       }
     ]), rows) %}
 {% endfor %}
 
+{% block beforeContent %}
+  {{ govukBackLink({ href: "/", text: "Back" }) }}
+{% endblock %}
 
 {% block content %}
 
