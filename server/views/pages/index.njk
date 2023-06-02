@@ -1,70 +1,11 @@
-{% from "govuk/components/table/macro.njk" import govukTable %}
 {% extends "../partials/layout.njk" %}
 
 {% set pageTitle = applicationName + " - Home" %}
 {% set mainClasses = "app-container govuk-body" %}
 
-
-
 {% block content %}
 
-{{ govukTable({
-  caption: "Device Wearers",
-  captionClasses: "govuk-table__caption--l",
-  firstCellIsHeader: true,
-  head: [
-    {
-      text: "Device Wearer ID"
-    },
-    {
-      text: "First Name"
-    },
-    {
-      text: "Last Name"
-    },
-    {
-      text: "Type"
-    },
-    {
-      text: "Actions"
-    }
-  ],
-  rows: [
-    [
-      {
-        text: "123456789"
-      },
-      {
-        text: "J"
-      },
-      {
-        text: "Smith"
-      },
-      {
-        text: "Curfew"
-      },
-      {
-        html: "<a href=\"#\">View</a>"
-      }
-    ],
-    [
-      {
-        text: "987654321"
-      },
-      {
-        text: "J"
-      },
-      {
-        text: "Doe"
-      },
-      {
-        text: "RF"
-      },
-      {
-        html: "<a href=\"#\">View</a>"
-      }
-    ]
-  ]
-}) }}
+  <h1>This site is under construction...</h1>
+  <p>Please check back later when there is content to view.</p>
 
 {% endblock %}

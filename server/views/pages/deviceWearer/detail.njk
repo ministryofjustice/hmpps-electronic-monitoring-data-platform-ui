@@ -1,0 +1,51 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Home" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block beforeContent %}
+  {{ govukBackLink({ href: "/device-wearers", text: "Back" }) }}
+{% endblock %}
+
+{% block content %}
+
+{{ govukSummaryList({
+  rows: [
+    {
+      key: {
+        text: "Device Wearer ID"
+      },
+      value: {
+        text: deviceWearer.deviceWearerId
+      }
+    },
+    {
+      key: {
+        text: "First Name"
+      },
+      value: {
+        text: deviceWearer.firstName
+      }
+    },
+    {
+      key: {
+        text: "Last Name"
+      },
+      value: {
+        text: deviceWearer.lastName
+      }
+    },
+    {
+      key: {
+        text: "Type"
+      },
+      value: {
+        text: deviceWearer.type
+      }
+    }
+  ]
+}) }}
+
+{% endblock %}
