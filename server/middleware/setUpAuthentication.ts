@@ -4,10 +4,12 @@ import passport from 'passport'
 import flash from 'connect-flash'
 import config from '../config'
 import auth from '../authentication/auth'
+import logger from '../../logger'
 
 const router = express.Router()
 
 export default function setUpAuth(): Router {
+  logger.info('Setting up auth')
   auth.init()
 
   router.use(passport.initialize())
