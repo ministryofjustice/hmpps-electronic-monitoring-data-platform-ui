@@ -12,6 +12,12 @@ const dummyData = [
     lastName: 'Smith',
     type: 'Curfew',
   },
+  {
+    deviceWearerId: '987654321',
+    firstName: 'J',
+    lastName: 'Doe',
+    type: 'Inclusion Zone',
+  },
 ]
 
 export default class DeviceWearerService {
