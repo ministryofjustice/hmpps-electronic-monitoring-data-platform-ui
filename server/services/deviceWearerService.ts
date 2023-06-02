@@ -16,7 +16,13 @@ const dummyData = [
 
 export default class DeviceWearerService {
   async findOne(accessToken: string, deviceWearerId: string): Promise<DeviceWearer> {
-    return dummyData[0]
+    const searchResult = dummyData.find(deviceWearer => deviceWearer.deviceWearerId === deviceWearerId)
+
+    if (!searchResult) {
+      throw new Error(`Unknown device wearer id: ${deviceWearerId}`)
+    }
+
+    return searchResult
   }
 
   async findMany(accessToken: string, searchTerm: string): Promise<Array<DeviceWearer>> {

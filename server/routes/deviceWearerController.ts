@@ -13,11 +13,15 @@ export default class DeviceWearerController {
     // }
   }
 
-  async viewDeviceWearer({ user, params }: Request, res: Response) {
+  async viewDeviceWearer({ user, params }: Request, res: Response, next: NextFunction) {
     // if (user) {
-    const deviceWearer = await this.deviceWearerService.findOne('' /* user.token */, params.id)
+    try {
+      const deviceWearer = await this.deviceWearerService.findOne('' /* user.token */, params.id)
 
-    res.render('pages/deviceWearer/detail', { deviceWearer })
+      res.render('pages/deviceWearer/detail', { deviceWearer })
+    } catch (err) {
+      next(err)
+    }
     // }
   }
 }

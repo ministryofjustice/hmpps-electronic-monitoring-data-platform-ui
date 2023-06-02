@@ -18,7 +18,7 @@ export default function routes(service: Services): Router {
   })
 
   router.get('/device-wearers', (req, res) => deviceWearerController.listDeviceWearers(req, res))
-  router.get('/device-wearer/:id', (req, res) => deviceWearerController.viewDeviceWearer(req, res))
+  router.get('/device-wearer/:id', (req, res, next) => deviceWearerController.viewDeviceWearer(req, res, next))
 
   return router
 }
