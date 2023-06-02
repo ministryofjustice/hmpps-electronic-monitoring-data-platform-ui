@@ -32,6 +32,9 @@ export default class DeviceWearerService {
   }
 
   async findMany(accessToken: string, searchTerm: string): Promise<Array<DeviceWearer>> {
+    if (accessToken || searchTerm) {
+      // do nothing
+    }
     return dummyData
   }
 }

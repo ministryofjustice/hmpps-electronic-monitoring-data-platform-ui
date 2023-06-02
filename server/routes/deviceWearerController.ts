@@ -8,7 +8,9 @@ export default class DeviceWearerController {
   async listDeviceWearers({ user }: Request, res: Response) {
     // if (user) {
     const deviceWearers = await this.deviceWearerService.findMany('' /* user.token */, '' /* req.query.searchTerm */)
-
+    if (user) {
+      // do nothing
+    }
     res.render('pages/deviceWearer/list', { deviceWearers })
     // }
   }
@@ -17,7 +19,9 @@ export default class DeviceWearerController {
     // if (user) {
     try {
       const deviceWearer = await this.deviceWearerService.findOne('' /* user.token */, params.id)
-
+      if (user) {
+        // do nothing
+      }
       res.render('pages/deviceWearer/detail', { deviceWearer })
     } catch (err) {
       next(err)
