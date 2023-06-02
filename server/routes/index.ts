@@ -4,7 +4,7 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 
 import DeviceWearerController from './deviceWearerController'
-import logger from '../../logger'
+// import logger from '../../logger'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function routes(service: Services): Router {
@@ -18,7 +18,7 @@ export default function routes(service: Services): Router {
   })
 
   router.get('/device-wearers', (req, res) => deviceWearerController.listDeviceWearers(req, res))
-  router.get('/device-wearer/:id', (req, res, next) => deviceWearerController.viewDeviceWearer(req, res, next))
+  router.get('/device-wearers/:id', (req, res, next) => deviceWearerController.viewDeviceWearer(req, res, next))
 
   return router
 }
