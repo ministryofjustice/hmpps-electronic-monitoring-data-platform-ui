@@ -12,7 +12,7 @@ generic-service:
   ingress:
     enabled: true
     host: app-hostname.local    # override per environment
-    tlsSecretName: hmpps-electronic-monitoring-data-platform-ui-cert
+    tlsSecretName: hmpps-electronic-monitoring-cert
 
   livenessProbe:
     httpGet:
