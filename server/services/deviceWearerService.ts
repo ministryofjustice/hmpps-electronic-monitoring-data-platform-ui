@@ -32,9 +32,17 @@ export default class DeviceWearerService {
   }
 
   async findMany(accessToken: string, searchTerm: string): Promise<Array<DeviceWearer>> {
-    if (accessToken || searchTerm) {
-      // do nothing
+    let response = dummyData
+
+    if (accessToken) {
+      throw new Error(`Access token supplied but not yet supported!`)
     }
-    return dummyData
+
+    if (searchTerm) {
+      const userSearchTerm = searchTerm
+      response = dummyData.filter(deviceWearer => deviceWearer.firstName === userSearchTerm)
+    }
+
+    return response
   }
 }

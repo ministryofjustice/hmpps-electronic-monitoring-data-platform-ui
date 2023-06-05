@@ -6,26 +6,24 @@ export default class DeviceWearerController {
   constructor(private readonly deviceWearerService: DeviceWearerService) {}
 
   async listDeviceWearers({ user }: Request, res: Response) {
-    // if (user) {
-    const deviceWearers = await this.deviceWearerService.findMany('' /* user.token */, '' /* req.query.searchTerm */)
     if (user) {
-      // do nothing
+      const deviceWearers = await this.deviceWearerService.findMany('' /* user.token */, '' /* req.query.searchTerm */)
+      res.render('pages/deviceWearer/list', { deviceWearers })
+    } else {
+      res.render('pages/authError/noUser')
     }
-    res.render('pages/deviceWearer/list', { deviceWearers })
-    // }
   }
 
   async viewDeviceWearer({ user, params }: Request, res: Response, next: NextFunction) {
-    // if (user) {
-    try {
-      const deviceWearer = await this.deviceWearerService.findOne('' /* user.token */, params.id)
-      if (user) {
-        // do nothing
+    if (user) {
+      try {
+        const deviceWearer = await this.deviceWearerService.findOne('' /* user.token */, params.id)
+        res.render('pages/deviceWearer/detail', { deviceWearer })
+      } catch (err) {
+        next(err)
       }
-      res.render('pages/deviceWearer/detail', { deviceWearer })
-    } catch (err) {
-      next(err)
+    } else {
+      res.render('pages/authError/noUser')
     }
-    // }
   }
 }
