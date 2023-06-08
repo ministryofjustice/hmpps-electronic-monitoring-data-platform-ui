@@ -22,3 +22,14 @@ describe('GET /', () => {
       })
   })
 })
+
+describe('GET /', () => {
+  it('Index page should include Device Wearers link', () => {
+    return request(app)
+      .get('/')
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('Show device wearers')
+      })
+  })
+})
