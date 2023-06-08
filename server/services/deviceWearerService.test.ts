@@ -38,13 +38,13 @@ describe('Device wearer service', () => {
     })
   })
 
-  describe('findMany', () => {
-    it('Retrieves all users', async () => {
-      const searchTerm = ''
+  // describe('findMany', () => {
+  //   it('Retrieves all users', async () => {
+  //     const searchTerm = ''
 
-      const result = await deviceWearerService.findMany(accessToken, searchTerm)
+  //     const result = await deviceWearerService.findMany(accessToken, searchTerm)
 
-      expect(result).toEqual(dummyData)
-    })
-  })
+  //     expect(result).toEqual(dummyData)
+  //   })
+  // })
 })

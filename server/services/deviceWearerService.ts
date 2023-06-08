@@ -1,3 +1,5 @@
+// const axios = require('axios')
+
 export type DeviceWearer = {
   deviceWearerId: string
   firstName: string
@@ -32,7 +34,13 @@ export default class DeviceWearerService {
   }
 
   async findMany(accessToken: string, searchTerm: string): Promise<Array<DeviceWearer>> {
+    // const URL = 'http://localhost:8081/device-wearers/v1'
     let response = dummyData
+    // try {
+    //   response = axios.get(URL)
+    // } catch {
+    //   response = dummyData
+    // }
 
     if (accessToken) {
       throw new Error(`Access token supplied but not yet supported!`)
@@ -40,7 +48,7 @@ export default class DeviceWearerService {
 
     if (searchTerm) {
       const userSearchTerm = searchTerm
-      response = dummyData.filter(deviceWearer => deviceWearer.firstName === userSearchTerm)
+      response = response.filter(deviceWearer => deviceWearer.firstName === userSearchTerm)
     }
 
     return response
