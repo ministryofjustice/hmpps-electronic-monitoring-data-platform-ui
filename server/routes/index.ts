@@ -19,6 +19,10 @@ export default function routes(service: Services): Router {
 
   router.get('/device-wearers', (req, res) => deviceWearerController.listDeviceWearers(req, res))
   router.get('/device-wearers/:id', (req, res, next) => deviceWearerController.viewDeviceWearer(req, res, next))
+  router.get('/hello-dev-api', (req, res) =>
+    res.redirect('https://api.electronic-monitoring-dev.hmpps.service.justice.gov.uk/hello/v1'),
+  )
+  router.get('/hello-local-api', (req, res) => res.redirect('http://localhost:8081/hello/v1'))
 
   return router
 }
