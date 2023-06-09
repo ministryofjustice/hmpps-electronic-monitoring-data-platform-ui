@@ -1,5 +1,9 @@
 // const axios = require('axios')
 
+import RestClient from '../data/restClient'
+import config from '../config'
+import logger from '../../logger'
+
 export type DeviceWearer = {
   deviceWearerId: string
   firstName: string
@@ -23,6 +27,10 @@ const dummyData = [
 ]
 
 export default class DeviceWearerService {
+  private restClient(): RestClient {
+    return new RestClient('Device Wearer Client', config.apis.deviceWearer, null)
+  }
+
   async findOne(accessToken: string, deviceWearerId: string): Promise<DeviceWearer> {
     const searchResult = dummyData.find(deviceWearer => deviceWearer.deviceWearerId === deviceWearerId)
 
@@ -34,23 +42,14 @@ export default class DeviceWearerService {
   }
 
   async findMany(accessToken: string, searchTerm: string): Promise<Array<DeviceWearer>> {
-    // const URL = 'http://localhost:8081/device-wearers/v1'
-    let response = dummyData
-    // try {
-    //   response = axios.get(URL)
-    // } catch {
-    //   response = dummyData
-    // }
-
-    if (accessToken) {
-      throw new Error(`Access token supplied but not yet supported!`)
+    let result: DeviceWearer[]
+    try {
+      logger.debug(`calling deviceWearerService.findMany, with searchterm ${searchTerm}`)
+      result = (await this.restClient().get({ path: '/device-wearers/v1' })) as DeviceWearer[]
+    } catch (e) {
+      logger.error({ err: e }, 'failed to fetch')
+      throw e
     }
-
-    if (searchTerm) {
-      const userSearchTerm = searchTerm
-      response = response.filter(deviceWearer => deviceWearer.firstName === userSearchTerm)
-    }
-
-    return response
+    return result
   }
 }

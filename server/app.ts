@@ -37,7 +37,11 @@ export default function createApp(services: Services): express.Application {
   app.use(authorisationMiddleware())
   app.use(setUpCsrf())
   app.use(setUpCurrentUser(services))
-
+  // fake user for local development
+  // app.use((req, res, next) => {
+  //   req.user = { authSource: '', username: '', token: 'abc' }
+  //   next()
+  // })
   app.use(routes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))

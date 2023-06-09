@@ -2,6 +2,7 @@ import { type RequestHandler, Router } from 'express'
 
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
+import type { ListDeviceWearersRequest } from './deviceWearerController'
 
 import DeviceWearerController from './deviceWearerController'
 // import logger from '../../logger'
@@ -17,7 +18,9 @@ export default function routes(service: Services): Router {
     res.render('pages/index')
   })
 
-  router.get('/device-wearers', (req, res) => deviceWearerController.listDeviceWearers(req, res))
+  router.get('/device-wearers', (req, res) =>
+    deviceWearerController.listDeviceWearers(req as ListDeviceWearersRequest, res),
+  )
   router.get('/device-wearers/:id', (req, res, next) => deviceWearerController.viewDeviceWearer(req, res, next))
   router.get('/hello-dev-api', (req, res) =>
     res.redirect('https://api.electronic-monitoring-dev.hmpps.service.justice.gov.uk/hello/v1'),
