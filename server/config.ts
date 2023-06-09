@@ -69,7 +69,12 @@ export default {
       enabled: get('TOKEN_VERIFICATION_ENABLED', 'false') === 'true',
     },
     deviceWearer: {
-      url: get('ELECTRONIC_MONITORING_API_URL', 'http://localhost:8081', requiredInProduction),
+      // url: get('ELECTRONIC_MONITORING_API_URL', 'http://localhost:8081', requiredInProduction),
+      url: get(
+        'ELECTRONIC_MONITORING_API_URL',
+        'https://api.electronic-monitoring-dev.hmpps.service.justice.gov.uk',
+        requiredInProduction,
+      ),
       timeout: {
         response: Number(get('ELECTRONIC_MONITORING_API_URL_TIMEOUT_RESPONSE', 5000)),
         deadline: Number(get('ELECTRONIC_MONITORING_API_URL_TIMEOUT_DEADLINE', 5000)),

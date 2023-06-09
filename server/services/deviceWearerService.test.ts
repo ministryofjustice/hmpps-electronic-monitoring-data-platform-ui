@@ -1,4 +1,9 @@
 import DeviceWearerService from './deviceWearerService'
+import RestClient from '../data/restClient'
+import config from '../config'
+// import {ApiConfig} from "../config";
+
+jest.mock('../data/restClient')
 
 const dummyData = [
   {
@@ -14,14 +19,22 @@ const dummyData = [
     type: 'Inclusion Zone',
   },
 ]
+
 let deviceWearerService: DeviceWearerService
 const accessToken = ''
 
 describe('Device wearer service', () => {
+  beforeEach(() => {
+    const mockRestClient = new RestClient(
+      'Mock Device Wearer Client',
+      config.apis.deviceWearer,
+      null,
+    ) as jest.Mocked<RestClient>
+    mockRestClient.get.mockResolvedValue(dummyData)
+    deviceWearerService = new DeviceWearerService(mockRestClient)
+  })
+
   describe('findOne', () => {
-    beforeEach(() => {
-      deviceWearerService = new DeviceWearerService()
-    })
     it('Retrieves one device wearer when deviceWearerId exists', async () => {
       const testId = '987654321'
 
@@ -38,13 +51,13 @@ describe('Device wearer service', () => {
     })
   })
 
-  // describe('findMany', () => {
-  //   it('Retrieves all users', async () => {
-  //     const searchTerm = ''
+  describe('findMany', () => {
+    it('Retrieves all device wearers', async () => {
+      const searchTerm = ''
 
-  //     const result = await deviceWearerService.findMany(accessToken, searchTerm)
+      const result = await deviceWearerService.findMany(accessToken, searchTerm)
 
-  //     expect(result).toEqual(dummyData)
-  //   })
-  // })
+      expect(result).toEqual(dummyData)
+    })
+  })
 })
