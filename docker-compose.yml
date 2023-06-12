@@ -40,6 +40,8 @@ services:
       - API_CLIENT_SECRET=client-secret
       - SYSTEM_CLIENT_ID=system-client-id
       - SYSTEM_CLIENT_SECRET=system-client-secret
+      # Uncomment to use local API for testing
+      # - ELECTRONIC_MONITORING_API_URL=http://localhost:8081
 
 networks:
   hmpps:
