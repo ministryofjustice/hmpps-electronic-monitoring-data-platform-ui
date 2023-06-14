@@ -2,68 +2,34 @@
 [![repo standards badge](https://img.shields.io/badge/dynamic/json?color=blue&style=flat&logo=github&label=MoJ%20Compliant&query=%24.result&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fhmpps-electronic-monitoring-data-platform-ui)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-github-repositories.html#hmpps-electronic-monitoring-data-platform-ui "Link to report")
 [![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-electronic-monitoring-data-platform-ui/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/hmpps-electronic-monitoring-data-platform-ui)
 
-Template github repo used for new Typescript based projects.
+This is the UI for the Electronic Monitoring project application.
+- Currently in Discovery/Alpha phase
+- Based off [hmpps-template-typescript](https://github.com/ministryofjustice/hmpps-template-typescript) - please see that project for original and setup instructions
+- Linked API project: [hmpps-electronic-monitoring-data-platform-api](https://github.com/ministryofjustice/hmpps-electronic-monitoring-data-platform-api)
 
-# Instructions
+## Before you commit
+Our source control policy is to work via trunk-based development and pair programming, with frequent commits to main.
 
-If this is a HMPPS project then the project will be created as part of bootstrapping - 
-see https://github.com/ministryofjustice/dps-project-bootstrap.
+Aim to commit in small, regular chunks - a `red` --> `green` --> `refactor` cycle is a good increment.
 
-This bootstrap is community managed by the mojdt `#typescript` slack channel. 
-Please raise any questions or queries there. Contributions welcome!
+If you are **not** pair programming, it's recommended to commit to a short-lived branch and merge in by PR.
+- All linting must pass
+- All code must have tests
+- All tests must pass
 
-Our security policy is located [here](https://github.com/ministryofjustice/hmpps-electronic-monitoring-data-platform-ui/security/policy). 
 
-More information about the template project including features can be found [here](https://dsdmoj.atlassian.net/wiki/spaces/NDSS/pages/3488677932/Typescript+template+project).
-
-## Creating a CloudPlatform namespace
-
-When deploying to a new namespace, you may wish to use this template typescript project namespace as the basis for your new namespace:
-
-<https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-electronic-monitoring-data-platform-ui>
-
-This template namespace includes an AWS elasticache setup - which is required by this template project.
-
-Copy this folder, update all the existing namespace references, and submit a PR to the CloudPlatform team. Further instructions from the CloudPlatform team can be found here: <https://user-guide.cloud-platform.service.justice.gov.uk/#cloud-platform-user-guide>
-
-## Renaming from HMPPS Template Typescript - github Actions
-
-Once the new repository is deployed. Navigate to the repository in github, and select the `Actions` tab.
-Click the link to `Enable Actions on this repository`.
-
-Find the Action workflow named: `rename-project-create-pr` and click `Run workflow`.  This workflow will
-execute the `rename-project.bash` and create Pull Request for you to review.  Review the PR and merge.
-
-Note: ideally this workflow would run automatically however due to a recent change github Actions are not
-enabled by default on newly created repos. There is no way to enable Actions other then to click the button in the UI.
-If this situation changes we will update this project so that the workflow is triggered during the bootstrap project.
-Further reading: <https://github.community/t/workflow-isnt-enabled-in-repos-generated-from-template/136421>
-
-## Manually branding from template app
-Run the `rename-project.bash` and create a PR.
-
-The rename-project.bash script takes a single argument - the name of the project and calculates from it the project description
-It then performs a search and replace and directory renames so the project is ready to be used.
-
-## Ensuring slack notifications are raised correctly
-
-To ensure notifications are routed to the correct slack channels, update the `alerts-slack-channel` and `releases-slack-channel` parameters in `.circle/config.yml` to an appropriate channel.
-
-## Running the app
+## Running & deploying the app
+### Running the app
 The easiest way to run the app is to use docker compose to create the service and all dependencies. 
 
 `docker-compose pull`
 
 `docker-compose up`
 
-### Dependencies
-The app requires: 
-* hmpps-auth - for authentication
-* redis - session store and token caching
 
 ### Running the app for development
 
-To start the main services excluding the example typescript template app: 
+To start the main services: 
 
 `docker-compose up --scale=app=0`
 
@@ -101,8 +67,37 @@ Or run tests with the cypress UI:
 
 `npm run int-test-ui`
 
+## Resources
+### Cloud resources
+Resources for this app are defined in two other MoJ repositories:
+- The HMPPS Cloud Platform namespace folders for this project([dev](https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-electronic-monitoring-dev), [preprod](https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-electronic-monitoring-preprod), & [prod](https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-electronic-monitoring-prod))
+- [DPS Project Bootstrap /`projects.json`.](https://github.com/ministryofjustice/dps-project-bootstrap/blob/main/projects.json)
+### Local resource dependencies
+Locally this API runs using Docker containers. These resources are defined (for local deployment only) in [`Docker-compose.yml`](https://github.com/ministryofjustice/hmpps-electronic-monitoring-data-platform-ui/blob/main/docker-compose.yml). The app requires: 
+* hmpps-auth - for authentication
+* redis - session store and token caching
+- (for test running only) a wiremock container
 
-### Dependency Checks
+### Environment variables and secrets
+Cloud variables are defined in [`helm_deploy`](https://github.com/ministryofjustice/hmpps-electronic-monitoring-data-platform-ui/tree/main/helm_deploy), as well as the above Cloud Platform and DPS Bootstrap repos. Other Kubernetes secrets should be requested in the [#hmpps-auth-audit-registers](https://mojdt.slack.com/archives/C02S71KUBED) channel
+
+
+
+## Authentication
+Obtaining an authentication account: You need to clone [this ticket](https://dsdmoj.atlassian.net/browse/HAAR-1486), changing it to your own name and email, and post in [#hmpps-auth-audit-registers](https://mojdt.slack.com/archives/C02S71KUBED) requesting somebody to add a dev account for you.
+### Disabling authentication
+Running locally, the app may not correctly connect to hmpps-auth authentication (and you may not yet have an account, as detailed above). You can turn off the auth in `server/app.ts`:
+- Comment out:
+  - `app.use(setUpAuthentication())`
+  - `app.use(authorisationMiddleware())`
+  - `app.use(setUpCurrentUser(services))`
+- Uncomment:
+  - ``
+// app.use((req, res, next) => { req.user = { authSource: '', username: '', token: 'abc' } next() })
+``
+- **Do not commit this change to the server**
+
+## Dependency Checks
 
 The template project has implemented some scheduled checks to ensure that key dependencies are kept up to date.
 If these are not desired in the cloned project, remove references to `check_outdated` job from `.circleci/config.yml`
