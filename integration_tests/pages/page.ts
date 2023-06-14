@@ -7,6 +7,7 @@ export default abstract class Page {
 
   constructor(private readonly title: string) {
     this.checkOnPage()
+    this.checkPhaseBanner()
   }
 
   checkOnPage(): void {
