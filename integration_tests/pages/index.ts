@@ -1,6 +1,7 @@
-import Page, { PageElement } from './page'
+import AuthenticatedPage from './authenticatedPage'
+import { PageElement } from './page'
 
-export default class IndexPage extends Page {
+export default class IndexPage extends AuthenticatedPage {
   constructor() {
     super('This site is under construction...')
   }

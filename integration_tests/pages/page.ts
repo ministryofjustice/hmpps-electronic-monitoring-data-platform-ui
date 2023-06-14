@@ -7,15 +7,10 @@ export default abstract class Page {
 
   constructor(private readonly title: string) {
     this.checkOnPage()
-    this.checkPhaseBanner()
   }
 
   checkOnPage(): void {
     cy.get('h1').contains(this.title)
-  }
-
-  checkPhaseBanner(): void {
-    cy.get('.govuk-phase-banner__content__tag').contains('Discovery')
   }
 
   signOut = (): PageElement => cy.get('[data-qa=signOut]')
