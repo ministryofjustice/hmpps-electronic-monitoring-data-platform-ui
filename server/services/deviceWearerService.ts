@@ -19,14 +19,17 @@ export default class DeviceWearerService {
   }
 
   async findOne(accessToken: string, deviceWearerId: string): Promise<DeviceWearer> {
-    const data = (await this.restClient.get({ path: '/device-wearers/v1' })) as DeviceWearer[]
-    const searchResult = data.find(deviceWearer => deviceWearer.deviceWearerId === deviceWearerId)
-
-    if (!searchResult) {
-      throw new Error(`Unknown device wearer id: ${deviceWearerId}`)
+    let result: DeviceWearer
+    try {
+      logger.debug(`calling deviceWearerService.findOne`)
+      result = (await this.restClient.get({ path: `/device-wearers/v1/${deviceWearerId}` })) as DeviceWearer
+      // remove line 25 and uncomment line 27 whenever the issue is fixed on api deployment
+      // result = (await this.restClient.get({ path: `/device-wearers/v1/id/${deviceWearerId}` })) as DeviceWearer
+    } catch (e) {
+      logger.error({ err: e }, 'failed to fetch')
+      throw e
     }
-
-    return searchResult
+    return result
   }
 
   async findMany(accessToken: string, searchTerm: string): Promise<Array<DeviceWearer>> {

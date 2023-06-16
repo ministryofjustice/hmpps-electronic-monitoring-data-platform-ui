@@ -24,35 +24,40 @@ let deviceWearerService: DeviceWearerService
 const accessToken = ''
 
 describe('Device wearer service', () => {
-  beforeEach(() => {
-    const mockRestClient = new RestClient(
-      'Mock Device Wearer Client',
-      config.apis.deviceWearer,
-      null,
-    ) as jest.Mocked<RestClient>
-    mockRestClient.get.mockResolvedValue(dummyData)
-    deviceWearerService = new DeviceWearerService(mockRestClient)
-  })
+  const mockRestClient = new RestClient(
+    'Mock Device Wearer Client',
+    config.apis.deviceWearer,
+    null,
+  ) as jest.Mocked<RestClient>
 
   describe('findOne', () => {
     it('Retrieves one device wearer when deviceWearerId exists', async () => {
-      const testId = '987654321'
+      mockRestClient.get.mockResolvedValue(dummyData[1])
+      deviceWearerService = new DeviceWearerService(mockRestClient)
 
+      const testId = '987654321'
       const result = await deviceWearerService.findOne(accessToken, testId /* req.query.searchTerm */)
 
       expect(result.deviceWearerId).toEqual(testId)
       expect(result).toEqual(dummyData[1])
     })
-    it('Throws an exception when deviceWearerId does not exist', async () => {
-      const testId = 'this is a totally fake ID'
-      const expectedError = 'Unknown device wearer id: this is a totally fake ID'
 
-      await expect(deviceWearerService.findOne(accessToken, testId)).rejects.toThrow(expectedError)
+    it('Return null when deviceWearerId does not exist', async () => {
+      mockRestClient.get.mockResolvedValue(null)
+      deviceWearerService = new DeviceWearerService(mockRestClient)
+
+      const testId = 'this is a totally fake ID'
+      const result = await deviceWearerService.findOne(accessToken, testId /* req.query.searchTerm */)
+
+      expect(result).toEqual(null)
     })
   })
 
   describe('findMany', () => {
     it('Retrieves all device wearers', async () => {
+      mockRestClient.get.mockResolvedValue(dummyData)
+      deviceWearerService = new DeviceWearerService(mockRestClient)
+
       const searchTerm = ''
 
       const result = await deviceWearerService.findMany(accessToken, searchTerm)
