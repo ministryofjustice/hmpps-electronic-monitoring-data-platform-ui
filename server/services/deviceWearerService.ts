@@ -4,6 +4,7 @@ import RestClient from '../data/restClient'
 // import config from '../config'
 import logger from '../../logger'
 import { DeviceWearerResponse } from '../data_models/deviceWearer'
+import List from '../@types/List'
 
 export default class DeviceWearerService {
   private restClient: RestClient
@@ -31,6 +32,18 @@ export default class DeviceWearerService {
     try {
       logger.debug(`calling deviceWearerService.findMany, with searchterm ${searchTerm}`)
       result = (await this.restClient.get({ path: '/device-wearers/v1' })) as DeviceWearerResponse
+    } catch (e) {
+      logger.error({ err: e }, 'failed to fetch')
+      throw e
+    }
+    return result
+  }
+
+  async searchPage(token: string, searchParam: string) {
+    let result: List<DeviceWearerResponse>
+    try {
+      logger.debug(`calling deviceWearerService.searchBy, with searchParam ${searchParam}`)
+      result = (await this.restClient.get({ path: '/device-wearers/v1/search' })) as List<DeviceWearerResponse>
     } catch (e) {
       logger.error({ err: e }, 'failed to fetch')
       throw e

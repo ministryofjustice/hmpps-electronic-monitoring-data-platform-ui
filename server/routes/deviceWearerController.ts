@@ -3,7 +3,7 @@ import { DeviceWearerResponse } from '../data_models/deviceWearer'
 
 import DeviceWearerService from '../services/deviceWearerService'
 
-type ListDeviceWearersRequest = Request & { user: Express.User }
+export type ListDeviceWearersRequest = Request & { user: Express.User }
 
 export default class DeviceWearerController {
   constructor(private readonly deviceWearerService: DeviceWearerService) {}
@@ -44,6 +44,29 @@ export default class DeviceWearerController {
       res.render('pages/authError/noUser')
     }
   }
-}
 
-export { ListDeviceWearersRequest }
+  async searchDeviceWearer({ user }: ListDeviceWearersRequest, res: Response, next: NextFunction) {
+    if (user) {
+      try {
+        // const searchParam = params.query
+        const deviceWearerResponse: DeviceWearerResponse = await this.deviceWearerService.findMany(
+          user.token,
+          '' /* req.query.searchTerm */,
+        )
+        if (deviceWearerResponse.deviceWearers.length === 0) {
+          res.render('pages/apiError', { errorMessage: deviceWearerResponse.error })
+        } else {
+          res.render('pages/deviceWearer/list', { deviceWearers: deviceWearerResponse.deviceWearers, isError: false })
+        }
+        // const deviceWearerResponse: DeviceWearerResponse = await this.deviceWearerService.searchBy(user.token, searchParam)
+        // if (deviceWearerResponse.deviceWearers.length === 0) {
+        //   res.render('pages/apiError', { errorMessage: deviceWearerResponse.error })
+        // } else {
+        //   res.render('pages/deviceWearer/search', { deviceWearers: deviceWearerResponse.deviceWearers, isError: false })
+        // }
+      } catch (err) {
+        next(err)
+      }
+    }
+  }
+}

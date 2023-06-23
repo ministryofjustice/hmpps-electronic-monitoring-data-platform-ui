@@ -21,9 +21,9 @@ export default function routes(service: Services): Router {
   router.get('/device-wearers', (req, res) =>
     deviceWearerController.listDeviceWearers(req as ListDeviceWearersRequest, res),
   )
-  router.get('/device-wearers/:id', (req, res, next) => deviceWearerController.viewDeviceWearer(req, res, next))
-  router.get('device-wearers/search', (req, res, next) => res.render('pages/deviceWearer/search'))
-  router.post('device-wearers/search', (req, res, next) =>
+  router.get('/device-wearers/id/:id', (req, res, next) => deviceWearerController.viewDeviceWearer(req, res, next))
+  router.get('/device-wearers/search', (req, res, next) => res.render('pages/deviceWearer/search'))
+  router.post('/device-wearers/search', (req, res, next) =>
     deviceWearerController.listDeviceWearers(req as ListDeviceWearersRequest, res),
   )
 
