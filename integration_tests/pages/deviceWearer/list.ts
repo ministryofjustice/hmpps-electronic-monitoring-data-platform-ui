@@ -3,7 +3,7 @@ import { PageElement } from '../page'
 
 export default class DeviceWearerListPage extends AuthenticatedPage {
   constructor() {
-    super('Device Wearers')
+    super('Search for a device wearer')
   }
 
   dataTable = (): PageElement => cy.get('.govuk-table')

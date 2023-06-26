@@ -1,0 +1,32 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% macro dataTable(columns, rows) %}
+
+  {% set renderedRows = [[ {
+    text: "No results matching search term",
+    colspan: columns | length,
+    classes: "govuk-\!-text-align-centre"
+    } ]]
+  %}
+
+  {% if rows | length %}
+    {% set renderedRows = rows %}
+  {% endif %}
+
+  {% set renderedColumns = [] %}
+
+  {% for column in columns %}
+    {% set renderedColumns = (renderedColumns.push(
+      {
+        text: column
+      }
+    ), renderedColumns) %}
+  {% endfor %}
+
+  {{ govukTable({
+    head: renderedColumns,
+    rows: renderedRows
+  }) }}
+
+{% endmacro %}
+

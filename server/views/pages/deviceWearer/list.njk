@@ -1,10 +1,13 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "moj/components/banner/macro.njk" import mojBanner %}
+{% from "moj/components/search/macro.njk" import mojSearch %}
+{% from "../../partials/dataTable.njk" import dataTable %}
+{% from "../../partials/search.njk" import search %}
 {% extends "../../partials/layout.njk" %}
 
 {% set pageTitle = applicationName + " - Home" %}
-{% set mainClasses = "app-container govuk-body" %}
 
 {% set rows = [] %}
 
@@ -35,43 +38,44 @@
 
 {% block content %}
 
-  <h1>Device Wearers</h1>
+  {%if error %}
 
-  {%if isError %}
-
-    {{ govukErrorSummary({
-      titleText: "There is a problem",
-      errorList: [
-        {
-          text: "Could not fetch data from remote API",
-          href: "#"
-        }
-      ]
+    {{ mojBanner({
+      text: error,
+      type: 'warning'
     }) }}
 
   {% endif %}
 
-  {{ govukTable({
-    captionClasses: "govuk-table__caption--l",
-    firstCellIsHeader: true,
-    head: [
-      {
-        text: "Device Wearer ID"
-      },
-      {
-        text: "First Name"
-      },
-      {
-        text: "Last Name"
-      },
-      {
-        text: "Type"
-      },
-      {
-        text: "Actions"
-      }
-    ],
-    rows: rows
-  }) }}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds govuk-!-margin-bottom-6">
+      {{ search({
+          action: '',
+          method: 'get',
+          input: {
+            id: 'search',
+            name: 'search'
+          },
+          label: {
+            text: "Search for a device wearer",
+            classes: 'govuk-label--l'
+          },
+          hint: {
+            text: "This search will attempt to match your whole input to any part of any field"
+          },
+          button: {
+            text: 'Search'
+          },
+          value: searchTerm
+        }) }}
+    </div>
+  </div>
+
+  {{
+    dataTable(
+      ["Device Wearer ID", "First Name", "Last Name", "Type", "Actions"],
+      rows
+    )
+  }}
 
 {% endblock %}

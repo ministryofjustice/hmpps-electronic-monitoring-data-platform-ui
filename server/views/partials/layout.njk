@@ -2,6 +2,10 @@
 
 {% extends "govuk/template.njk" %}
 
+
+{% set mainClasses = "app-container govuk-body govuk-!-padding-top-4" %}
+
+
 {% block head %}
   <!--[if !IE 8]><!-->
   <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>

@@ -1,6 +1,6 @@
 import passport from 'passport'
 import { Strategy } from 'passport-oauth2'
-import type { RequestHandler } from 'express'
+import type { RequestHandler, Request } from 'express'
 
 import config from '../config'
 import generateOauthClientToken from './clientCredentials'
@@ -17,6 +17,7 @@ passport.deserializeUser((user, done) => {
 })
 
 export type AuthenticationMiddleware = (tokenVerifier: TokenVerifier) => RequestHandler
+export type AuthenticatedRequest = Request & { user: Express.User }
 
 const authenticationMiddleware: AuthenticationMiddleware = verifyToken => {
   return async (req, res, next) => {
