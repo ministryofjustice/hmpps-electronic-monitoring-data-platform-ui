@@ -32,8 +32,9 @@ export default class DeviceWearerService {
         result = (await this.restClient.get({
           path: `/device-wearers/v1/search/${searchTerm}`,
         })) as DeviceWearerResponse
+      } else {
+        result = (await this.restClient.get({ path: '/device-wearers/v1' })) as DeviceWearerResponse
       }
-      result = (await this.restClient.get({ path: '/device-wearers/v1' })) as DeviceWearerResponse
     } catch (e) {
       logger.error({ err: e }, 'failed to fetch')
       throw e
