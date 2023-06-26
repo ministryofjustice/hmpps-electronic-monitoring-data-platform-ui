@@ -1,9 +1,10 @@
 import type { NextFunction, Request, Response } from 'express'
+import logger from '../../logger'
 import { DeviceWearerResponse } from '../data_models/deviceWearer'
 
 import DeviceWearerService from '../services/deviceWearerService'
 
-type ListDeviceWearersRequest = Request & { user: Express.User }
+export type ListDeviceWearersRequest = Request & { user: Express.User }
 
 export default class DeviceWearerController {
   constructor(private readonly deviceWearerService: DeviceWearerService) {}
@@ -44,6 +45,30 @@ export default class DeviceWearerController {
       res.render('pages/authError/noUser')
     }
   }
-}
 
-export { ListDeviceWearersRequest }
+  async searchDeviceWearer({ user, query }: Request, res: Response, next: NextFunction) {
+    if (user) {
+      try {
+        if (query.search == null) {
+          res.render('pages/deviceWearer/search')
+        } else {
+          logger.debug(
+            `calling deviceWearerController.searchDeviceWearer, with searchParams ${query.search.toString()}`,
+          )
+          const searchParam = query.search.toString()
+          const deviceWearerResponse: DeviceWearerResponse = await this.deviceWearerService.findMany(
+            user.token,
+            searchParam,
+          )
+          if (deviceWearerResponse.deviceWearers.length === 0) {
+            res.render('pages/apiError', { errorMessage: deviceWearerResponse.error })
+          } else {
+            res.render('pages/deviceWearer/list', { deviceWearers: deviceWearerResponse.deviceWearers, isError: false })
+          }
+        }
+      } catch (err) {
+        next(err)
+      }
+    }
+  }
+}

@@ -14,14 +14,23 @@ export default function routes(service: Services): Router {
 
   const deviceWearerController = new DeviceWearerController(service.deviceWearerService)
 
+  // Home
   get('/', (req, res, next) => {
     res.render('pages/index')
   })
 
+  // DeviceWearer routes
   router.get('/device-wearers', (req, res) =>
     deviceWearerController.listDeviceWearers(req as ListDeviceWearersRequest, res),
   )
-  router.get('/device-wearers/:id', (req, res, next) => deviceWearerController.viewDeviceWearer(req, res, next))
+  router.get('/device-wearers/id/:id', (req, res, next) => {
+    deviceWearerController.viewDeviceWearer(req, res, next)
+  })
+  router.get('/device-wearers/search', (req, res, next) => {
+    deviceWearerController.searchDeviceWearer(req, res, next)
+  })
+
+  // Other routes
   router.get('/hello-dev-api', (req, res) =>
     res.redirect('https://api.electronic-monitoring-dev.hmpps.service.justice.gov.uk/hello/v1'),
   )

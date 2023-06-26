@@ -31,7 +31,7 @@ describe('Device wearer service', () => {
   ) as jest.Mocked<RestClient>
 
   describe('findOne', () => {
-    it('Retrieves one device wearer when deviceWearerId exists', async () => {
+    it('retrieves one device wearer when deviceWearerId exists', async () => {
       const apiResponse = {
         error: '',
         deviceWearers: [dummyData[1]],
@@ -46,7 +46,7 @@ describe('Device wearer service', () => {
       expect(result.deviceWearers[0]).toEqual(dummyData[1])
     })
 
-    it('Return "No user found" error when deviceWearerId does not exist', async () => {
+    it('returns "No user found" error when deviceWearerId does not exist', async () => {
       const apiResponse = {
         error: 'No user found',
       }
@@ -62,7 +62,7 @@ describe('Device wearer service', () => {
   })
 
   describe('findMany', () => {
-    it('Retrieves all device wearers', async () => {
+    it('retrieves all device wearers when no search term is provided', async () => {
       const apiResponse = {
         error: '',
         deviceWearers: dummyData,
@@ -76,6 +76,37 @@ describe('Device wearer service', () => {
 
       expect(result.error).toEqual('')
       expect(result.deviceWearers).toEqual(dummyData)
+      expect(result.deviceWearers.length).toEqual(2)
+    })
+    it('retrieves only one device wearer when one matches search term', async () => {
+      const apiResponse = {
+        error: '',
+        deviceWearers: dummyData[0],
+      }
+      mockRestClient.get.mockResolvedValue(apiResponse)
+      deviceWearerService = new DeviceWearerService(mockRestClient)
+
+      const searchTerm = 'Curfew'
+
+      const result = await deviceWearerService.findMany(accessToken, searchTerm)
+
+      expect(result.error).toEqual('')
+      expect(result.deviceWearers).toEqual(dummyData[0])
+    })
+    it('returns "No matching users found" error when there are no matching results', async () => {
+      const expectedError = 'No matching users found'
+      const apiResponse = {
+        error: expectedError,
+        deviceWearers: Array,
+      }
+      mockRestClient.get.mockResolvedValue(apiResponse)
+      deviceWearerService = new DeviceWearerService(mockRestClient)
+
+      const searchTerm = 'Cheese is my favourite food'
+
+      const result = await deviceWearerService.findMany(accessToken, searchTerm)
+
+      expect(result.error).toEqual(expectedError)
     })
   })
 })
