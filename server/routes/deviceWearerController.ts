@@ -21,12 +21,13 @@ export default class DeviceWearerController {
       const deviceWearerResponse = await this.deviceWearerService.findMany(user.token, search.toString())
       this.renderDeviceWearerListView(res, {
         deviceWearers: deviceWearerResponse.deviceWearers,
-        error: null,
+        isError: false,
         searchTerm: search.toString(),
       })
     } catch (err) {
       this.renderDeviceWearerListView(res, {
         deviceWearers: [],
+        isError: true,
         error: err.message,
         searchTerm: search.toString(),
       })
@@ -38,12 +39,13 @@ export default class DeviceWearerController {
       const deviceWearerResponse = await this.deviceWearerService.findOne(user.token, deviceWearerId)
       this.renderDeviceWearerDetailView(res, {
         deviceWearer: deviceWearerResponse.deviceWearers[0],
-        error: null,
+        isError: false,
       })
     } catch (err) {
       this.renderDeviceWearerDetailView(res, {
         deviceWearer: null,
         error: err.message,
+        isError: true,
       })
     }
   }

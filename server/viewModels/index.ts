@@ -1,9 +1,10 @@
 type BaseErrorModel = {
+  isError: true
   error: NonNullable<string>
 }
 
 type BaseSuccessModel = {
-  error: null
+  isError: false
 }
 
 export { BaseErrorModel, BaseSuccessModel }
