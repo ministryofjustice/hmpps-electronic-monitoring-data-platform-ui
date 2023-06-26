@@ -29,10 +29,13 @@
 {% endfor %}
 
 {% block beforeContent %}
+  {{ super() }}
   {{ govukBackLink({ href: "/", text: "Back" }) }}
 {% endblock %}
 
 {% block content %}
+
+  <h1>Device Wearers</h1>
 
   {%if isError %}
 
@@ -49,7 +52,6 @@
   {% endif %}
 
   {{ govukTable({
-    caption: "Device Wearers",
     captionClasses: "govuk-table__caption--l",
     firstCellIsHeader: true,
     head: [
