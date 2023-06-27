@@ -1,74 +1,52 @@
-import type { NextFunction, Request, Response } from 'express'
-import logger from '../../logger'
-import { DeviceWearerResponse } from '../data_models/deviceWearer'
-
+import type { Response } from 'express'
 import DeviceWearerService from '../services/deviceWearerService'
-
-export type ListDeviceWearersRequest = Request & { user: Express.User }
+import { AuthenticatedRequest } from '../authentication/auth'
+import { DeviceWearerDetailViewModel, DeviceWearerListViewModel } from '../viewModels/DeviceWearer'
 
 export default class DeviceWearerController {
   constructor(private readonly deviceWearerService: DeviceWearerService) {}
 
-  async listDeviceWearers({ user }: ListDeviceWearersRequest, res: Response) {
+  // Ensure the data passed to the view conforms to the model
+  private renderDeviceWearerListView(res: Response, data: DeviceWearerListViewModel): void {
+    res.render('pages/deviceWearer/list', data)
+  }
+
+  // Ensure the data passed to the view conforms to the model
+  private renderDeviceWearerDetailView(res: Response, data: DeviceWearerDetailViewModel): void {
+    res.render('pages/deviceWearer/detail', data)
+  }
+
+  async listDeviceWearers({ user, query: { search = '' } }: AuthenticatedRequest, res: Response) {
     try {
-      const deviceWearerResponse: DeviceWearerResponse = await this.deviceWearerService.findMany(
-        user.token,
-        '' /* req.query.searchTerm */,
-      )
-      if (deviceWearerResponse.deviceWearers.length === 0) {
-        res.render('pages/apiError', { errorMessage: deviceWearerResponse.error })
-      } else {
-        res.render('pages/deviceWearer/list', { deviceWearers: deviceWearerResponse.deviceWearers, isError: false })
-      }
-    } catch (e) {
-      res.render('pages/apiError', { errorMessage: 'Something has gone wrong, sorry!' })
+      const deviceWearerResponse = await this.deviceWearerService.findMany(user.token, search.toString())
+      this.renderDeviceWearerListView(res, {
+        deviceWearers: deviceWearerResponse.deviceWearers,
+        isError: false,
+        searchTerm: search.toString(),
+      })
+    } catch (err) {
+      this.renderDeviceWearerListView(res, {
+        deviceWearers: [],
+        isError: true,
+        error: err.message,
+        searchTerm: search.toString(),
+      })
     }
   }
 
-  async viewDeviceWearer({ user, params }: Request, res: Response, next: NextFunction) {
-    if (user) {
-      try {
-        const deviceWearerResponse: DeviceWearerResponse = await this.deviceWearerService.findOne(user.token, params.id)
-        // res.render('pages/deviceWearer/detail', { deviceWearer: deviceWearerResponse.deviceWearers[0], errorMessage: deviceWearerResponse.error })
-        if (deviceWearerResponse.deviceWearers.length === 0) {
-          res.render('pages/apiError', { errorMessage: deviceWearerResponse.error })
-        } else {
-          res.render('pages/deviceWearer/detail', {
-            deviceWearer: deviceWearerResponse.deviceWearers[0],
-            isError: false,
-          })
-        }
-      } catch (err) {
-        next(err)
-      }
-    } else {
-      res.render('pages/authError/noUser')
-    }
-  }
-
-  async searchDeviceWearer({ user, query }: Request, res: Response, next: NextFunction) {
-    if (user) {
-      try {
-        if (query.search == null) {
-          res.render('pages/deviceWearer/search')
-        } else {
-          logger.debug(
-            `calling deviceWearerController.searchDeviceWearer, with searchParams ${query.search.toString()}`,
-          )
-          const searchParam = query.search.toString()
-          const deviceWearerResponse: DeviceWearerResponse = await this.deviceWearerService.findMany(
-            user.token,
-            searchParam,
-          )
-          if (deviceWearerResponse.deviceWearers.length === 0) {
-            res.render('pages/apiError', { errorMessage: deviceWearerResponse.error })
-          } else {
-            res.render('pages/deviceWearer/list', { deviceWearers: deviceWearerResponse.deviceWearers, isError: false })
-          }
-        }
-      } catch (err) {
-        next(err)
-      }
+  async viewDeviceWearer({ user, params: { deviceWearerId } }: AuthenticatedRequest, res: Response) {
+    try {
+      const deviceWearerResponse = await this.deviceWearerService.findOne(user.token, deviceWearerId)
+      this.renderDeviceWearerDetailView(res, {
+        deviceWearer: deviceWearerResponse.deviceWearers[0],
+        isError: false,
+      })
+    } catch (err) {
+      this.renderDeviceWearerDetailView(res, {
+        deviceWearer: null,
+        error: err.message,
+        isError: true,
+      })
     }
   }
 }
