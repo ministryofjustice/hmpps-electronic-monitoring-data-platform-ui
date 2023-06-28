@@ -84,7 +84,7 @@ describe('Device wearer service', () => {
     it('retrieves only one device wearer when one matches search term', async () => {
       const searchTerm = 'Curfew'
       jest.spyOn(mockRestClient, 'get').mockImplementation(async input => {
-        if (input.path === `/device-wearers/v1/search/${searchTerm}`) {
+        if (input.path === `/device-wearers/v2/search/${searchTerm}`) {
           return { error: '', deviceWearers: dummyData[0] }
         }
         throw new Error('Wrong call to API')
@@ -100,7 +100,7 @@ describe('Device wearer service', () => {
       const searchTerm = 'Cheese is my favourite food'
       const expectedError = 'No matching users found'
       jest.spyOn(mockRestClient, 'get').mockImplementation(async input => {
-        if (input.path === `/device-wearers/v1/search/${searchTerm}`) {
+        if (input.path === `/device-wearers/v2/search/${searchTerm}`) {
           return { error: expectedError, deviceWearers: [] }
         }
         throw new Error('Wrong call to API')

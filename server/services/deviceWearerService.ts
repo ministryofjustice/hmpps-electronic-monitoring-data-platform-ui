@@ -30,7 +30,7 @@ export default class DeviceWearerService {
       logger.debug(`calling deviceWearerService.findMany, with searchterm ${searchTerm}`)
       if (searchTerm) {
         result = (await this.restClient.get({
-          path: `/device-wearers/v1/search/${searchTerm}`,
+          path: `/device-wearers/v2/search/${searchTerm}`,
         })) as DeviceWearerResponse
       } else {
         result = (await this.restClient.get({ path: '/device-wearers/v1' })) as DeviceWearerResponse
