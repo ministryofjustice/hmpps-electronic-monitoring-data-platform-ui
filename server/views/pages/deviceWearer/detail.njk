@@ -1,7 +1,7 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
-{% from "../../partials/dataTable.njk" import dataTable %}
+{% from "../../partials/dataTable/macro.njk" import dataTable %}
 {% from "../../partials/search.njk" import search %}
 
 {% extends "../../partials/layout.njk" %}
@@ -77,10 +77,10 @@
   <h2>Devices</h2>
 
   {{
-    dataTable(
-      ["Device ID", "Device Type", "Status", "Date Tag Fitted", "Date Tag Removed", "Actions"],
-      rows
-    )
+    dataTable({
+      columns: ["Device ID", "Device Type", "Status", "Date Tag Fitted", "Date Tag Removed", "Actions"],
+      rows: rows
+    })
   }}
 
 {% endblock %}
