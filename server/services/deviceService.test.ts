@@ -18,27 +18,29 @@ describe('DeviceService', () => {
   describe('findByDeviceWearer', () => {
     it('should throw for a 400 api response', async () => {
       expect.assertions(2)
-      const deviceWearerId = '123456789'
 
       fakeDataPlatformApi.get('/devices/').reply(400, 'Bad Request')
 
-      await expect(deviceService.findByDeviceWearer('', deviceWearerId)).rejects.toMatchObject({
-        message: `Unable to find devices for ${deviceWearerId}, Bad API Response: Bad Request`,
-      })
+      const deviceWearerId = '123456789'
+      const expectedError = `Unable to find devices for ${deviceWearerId}, Bad API Response: Bad Request`
+      const expected = {message: expectedError} 
+      const result = deviceService.findByDeviceWearer('', deviceWearerId)
 
+      await expect(result).rejects.toMatchObject(expected)
       expect(fakeDataPlatformApi.isDone()).toBeTruthy()
     })
 
     it('should retry twice for a 500 api response', async () => {
       expect.assertions(2)
-      const deviceWearerId = '123456789'
 
       fakeDataPlatformApi.get('/devices/').times(3).reply(500)
 
-      await expect(deviceService.findByDeviceWearer('', deviceWearerId)).rejects.toMatchObject({
-        message: `Unable to find devices for ${deviceWearerId}, Bad API Response: Internal Server Error`,
-      })
+      const deviceWearerId = '123456789'
+      const expectedError = `Unable to find devices for ${deviceWearerId}, Bad API Response: Internal Server Error`
+      const expected = {message: expectedError} 
+      const result = deviceService.findByDeviceWearer('', deviceWearerId)
 
+      await expect(result).rejects.toMatchObject(expected)
       expect(fakeDataPlatformApi.isDone()).toBeTruthy()
     })
 
