@@ -1,3 +1,5 @@
+import logger from '../../logger'
+import config from '../config'
 import RestClient from '../data/restClient'
 
 type DeviceType =
@@ -13,25 +15,29 @@ type Device = {
   deviceId: string
   deviceType: DeviceType
   status: DeviceStatus
-  dateTagFitted: Date
-  dateTagRemoved: Date
+  dateTagFitted: string
+  dateTagRemoved: string
 }
 
-const inMemoryDatabase: Array<Device> = [
-  {
-    deviceId: '123456789',
-    deviceType: 'Location - fitted',
-    status: 'Removed',
-    dateTagFitted: new Date(),
-    dateTagRemoved: new Date(),
-  },
-]
+type ApiResponse<K extends string, T> = {
+  [k in K]: T
+}
 
 export default class DeviceService {
-  constructor(private readonly restClient: RestClient) {}
+  private restClient(token: string) {
+    return new RestClient('Data Platform API Client', config.apis.deviceWearer, token) // TODO: Rename config
+  }
 
   async findByDeviceWearer(accessToken: string, deviceWearerId: string): Promise<Array<Device>> {
-    return Promise.resolve(inMemoryDatabase)
+    try {
+      const response = await this.restClient(accessToken).get<ApiResponse<'devices', Device[]>>({
+        path: `/devices/`,
+      })
+
+      return response.devices
+    } catch (err) {
+      throw new Error(`Unable to find devices for ${deviceWearerId}`)
+    }
   }
 }
 

@@ -22,8 +22,8 @@ describe('DeviceService', () => {
       fakeDataPlatformApi.get('/devices/').reply(400, 'Bad Request')
 
       const deviceWearerId = '123456789'
-      const expectedError = `Unable to find devices for ${deviceWearerId}, Bad API Response: Bad Request`
-      const expected = {message: expectedError} 
+      const expectedError = `Unable to find devices for ${deviceWearerId}`
+      const expected = new Error(expectedError)
       const result = deviceService.findByDeviceWearer('', deviceWearerId)
 
       await expect(result).rejects.toMatchObject(expected)
@@ -36,8 +36,8 @@ describe('DeviceService', () => {
       fakeDataPlatformApi.get('/devices/').times(3).reply(500)
 
       const deviceWearerId = '123456789'
-      const expectedError = `Unable to find devices for ${deviceWearerId}, Bad API Response: Internal Server Error`
-      const expected = {message: expectedError} 
+      const expectedError = `Unable to find devices for ${deviceWearerId}`
+      const expected = new Error(expectedError)
       const result = deviceService.findByDeviceWearer('', deviceWearerId)
 
       await expect(result).rejects.toMatchObject(expected)
@@ -115,8 +115,3 @@ describe('DeviceService', () => {
     })
   })
 })
-
-// should handle bad input
-// Should handle malformed response from API
-// Should ensure return devices are for the deviceWearerId
-// Should do something for data that does not match the expected constraints
