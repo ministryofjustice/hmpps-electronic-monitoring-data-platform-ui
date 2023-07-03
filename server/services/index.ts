@@ -12,7 +12,7 @@ export const services = () => {
 
   const userService = new UserService(hmppsAuthClient)
   const deviceWearerService = new DeviceWearerService(dataPlatformApi)
-  const deviceService = new DeviceService(dataPlatformApi)
+  const deviceService = new DeviceService()
 
   return {
     applicationInfo,
