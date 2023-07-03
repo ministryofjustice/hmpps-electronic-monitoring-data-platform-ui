@@ -40,18 +40,31 @@ export default class DeviceWearerController {
 
   async viewDeviceWearer({ user, params: { deviceWearerId } }: AuthenticatedRequest, res: Response) {
     try {
-      const deviceWearerResponse = await this.deviceWearerService.findOne(user.token, deviceWearerId)
-      const devices = await this.deviceService.findByDeviceWearer(user.token, deviceWearerId)
+      const [deviceWearerResult, devicesResult] = await Promise.allSettled([
+        this.deviceWearerService.findOne(user.token, deviceWearerId),
+        this.deviceService.findByDeviceWearer(user.token, deviceWearerId),
+      ])
 
-      this.renderDeviceWearerDetailView(res, {
-        deviceWearer: deviceWearerResponse.deviceWearers[0],
-        devices,
-        isError: false,
-      })
+      if (deviceWearerResult.status === 'fulfilled' && devicesResult.status === 'fulfilled') {
+        this.renderDeviceWearerDetailView(res, {
+          deviceWearer: deviceWearerResult.value.deviceWearers[0],
+          devices: devicesResult.value,
+          isError: false,
+        })
+      } else if (deviceWearerResult.status === 'fulfilled') {
+        this.renderDeviceWearerDetailView(res, {
+          deviceWearer: deviceWearerResult.value.deviceWearers[0],
+          error: (devicesResult as PromiseRejectedResult).reason,
+          isError: true,
+        })
+      } else {
+        this.renderDeviceWearerDetailView(res, {
+          error: deviceWearerResult.reason,
+          isError: true,
+        })
+      }
     } catch (err) {
       this.renderDeviceWearerDetailView(res, {
-        deviceWearer: null,
-        devices: [],
         error: err.message,
         isError: true,
       })

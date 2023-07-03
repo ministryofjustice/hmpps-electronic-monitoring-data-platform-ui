@@ -9,7 +9,8 @@ type DeviceWearerListViewModel =
   | (BaseSuccessModel & { deviceWearers: Array<DeviceWearer>; searchTerm: string })
 
 type DeviceWearerDetailViewModel =
-  | (BaseErrorModel & { deviceWearer: null; devices: [] })
-  | (BaseSuccessModel & { deviceWearer: NonNullable<DeviceWearer>; devices: Array<Device> })
+  | BaseErrorModel
+  | (BaseErrorModel & { deviceWearer: DeviceWearer })
+  | (BaseSuccessModel & { deviceWearer: DeviceWearer; devices: Array<Device> })
 
 export { DeviceWearerListViewModel, DeviceWearerDetailViewModel }
