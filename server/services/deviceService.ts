@@ -1,5 +1,6 @@
 import config from '../config'
 import RestClient from '../data/restClient'
+import { ApiResponse } from '../utils/utils'
 
 type DeviceType =
   | 'Location - fitted'
@@ -18,13 +19,9 @@ type Device = {
   dateTagRemoved: string
 }
 
-type ApiResponse<K extends string, T> = {
-  [k in K]: T
-}
-
 export default class DeviceService {
   private restClient(token: string) {
-    return new RestClient('Data Platform API Client', config.apis.deviceWearer, token) // TODO: Rename config
+    return new RestClient('Data Platform API Client', config.apis.deviceWearer, token)
   }
 
   async findByDeviceWearer(accessToken: string, deviceWearerId: string): Promise<Array<Device>> {

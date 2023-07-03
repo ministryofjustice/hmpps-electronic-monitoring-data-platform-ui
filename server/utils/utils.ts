@@ -21,3 +21,7 @@ export const initialiseName = (fullName?: string): string | null => {
   const array = fullName.split(' ')
   return `${array[0][0]}. ${array.reverse()[0]}`
 }
+
+export type ApiResponse<K extends string, T> = {
+  [k in K]: T
+}
