@@ -26,11 +26,27 @@ export default class DeviceService {
 
   async findByDeviceWearer(accessToken: string, deviceWearerId: string): Promise<Array<Device>> {
     try {
-      const response = await this.restClient(accessToken).get<ApiResponse<'devices', Device[]>>({
-        path: `/devices/`,
-      })
-
-      return response.devices
+      // const response = await this.restClient(accessToken).get<ApiResponse<'devices', Device[]>>({
+      //   // path: `/devices/v1/device-wearer-id/${deviceWearerId}`
+      //   path: `/devices/`,
+      // })
+      return [
+        {
+          deviceId: '8225d883-0fd1-4456-aeba-f7701412d35e',
+          deviceType: 'RF',
+          status: 'Not fitted',
+          dateTagFitted: 'A',
+          dateTagRemoved: 'Ok',
+        },
+        {
+          deviceId: '8225d883-0fd1-4456-aeba-f7701412d35a',
+          deviceType: 'RF',
+          status: 'Not fitted',
+          dateTagFitted: 'B',
+          dateTagRemoved: 'Ok',
+        },
+      ]
+      // return response.devices
     } catch (err) {
       throw new Error(`Unable to find devices for ${deviceWearerId}`)
     }
