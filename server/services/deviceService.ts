@@ -1,4 +1,3 @@
-import logger from '../../logger'
 import config from '../config'
 import RestClient from '../data/restClient'
 
