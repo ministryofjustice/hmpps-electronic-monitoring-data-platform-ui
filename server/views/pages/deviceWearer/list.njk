@@ -2,8 +2,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "moj/components/banner/macro.njk" import mojBanner %}
-{% from "moj/components/search/macro.njk" import mojSearch %}
-{% from "../../partials/dataTable.njk" import dataTable %}
+{% from "../../partials/dataTable/macro.njk" import dataTable %}
 {% from "../../partials/search.njk" import search %}
 {% extends "../../partials/layout.njk" %}
 
@@ -72,10 +71,11 @@
   </div>
 
   {{
-    dataTable(
-      ["Device Wearer ID", "First Name", "Last Name", "Type", "Actions"],
-      rows
-    )
+    dataTable({
+      columns: ["Device Wearer ID", "First Name", "Last Name", "Type", "Actions"],
+      rows: rows,
+      emptyTableText: "No results matching search term"
+    })
   }}
 
 {% endblock %}

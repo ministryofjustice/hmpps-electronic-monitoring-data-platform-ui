@@ -1,14 +1,73 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "moj/components/banner/macro.njk" import mojBanner %}
+{% from "../../partials/dataTable/macro.njk" import dataTable %}
+{% from "../../partials/search.njk" import search %}
 
 {% extends "../../partials/layout.njk" %}
 
 {% set pageTitle = applicationName + " - Home" %}
 
-{% set deviceWearerDetailsHtml %}
-    <h2 class="govuk-heading-l">Device wearer details</h2>
-    {{ govukSummaryList({
+{% set rows = [] %}
+
+{% for device in devices %}
+    {% set rows = (rows.push([
+      {
+        text: device.deviceId
+      },
+      {
+        text: device.deviceType
+      },
+      {
+        text: device.status
+      },
+      {
+        text: device.dateTagFitted
+      },
+      {
+        text: device.dateTagRemoved
+      },
+      {
+        html: '<a href="/device/' + deviceWearer.deviceWearerId + '">View</a>'
+      }
+    ]), rows) %}
+{% endfor %}
+
+{% block beforeContent %}
+  {{ govukBackLink({ href: "/device-wearers", text: "Back" }) }}
+{% endblock %}
+
+{% block content %}
+
+  {%if isError %}
+
+    {{ mojBanner({
+      text: error,
+      type: 'warning'
+    }) }}
+
+  {% endif %}
+
+  <span class="govuk-caption-xl">{{ deviceWearer.deviceWearerId }}</span>
+  <h1 class="govuk-heading-xl">{{ deviceWearer.firstName }} {{ deviceWearer.lastName }}</h1>
+
+  {{ govukSummaryList({
+    card: {
+      title: {
+        text: "Device wearer summary",
+        headingLevel: 2
+      },
+      actions: {
+        items: [
+          {
+            href: "#",
+            text: "View all",
+            visuallyHiddenText: "device wearer details"
+          }
+        ]
+      }
+    },
     rows: [
         {
         key: {
@@ -43,40 +102,15 @@
         }
         }
     ]
-    }) }}
-{% endset -%}
+  }) }}
 
-{% set historicCasesHtml %}
-    <h2 class="govuk-heading-l">Historic cases</h2>
-    Comming soon...???
-{% endset -%}
+  <h2>Devices</h2>
 
-{% block beforeContent %}
-  {{ govukBackLink({ href: "/device-wearers", text: "Back" }) }}
-{% endblock %}
-
-{% block content %}
-
-<h1 class="govuk-heading-l">{{ deviceWearer.deviceWearerId }} - {{ deviceWearer.firstName }} {{ deviceWearer.lastName }}</h1>
-
-{{ govukTabs({
-  items: [
-    {
-      label: "Device wearer details",
-      id: "device-wearer-details",
-      panel: {
-        html: deviceWearerDetailsHtml
-      }
-    },
-    {
-      label: "Historic cases",
-      id: "historic-cases",
-      panel: {
-        html: historicCasesHtml
-      }
-    }
-  ]
-}) }}
-
+  {{
+    dataTable({
+      columns: ["Device ID", "Device Type", "Status", "Date Tag Fitted", "Date Tag Removed", "Actions"],
+      rows: rows
+    })
+  }}
 
 {% endblock %}

@@ -8,11 +8,11 @@ import { AuthenticatedRequest } from '../authentication/auth'
 // import logger from '../../logger'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function routes(service: Services): Router {
+export default function routes(services: Services): Router {
   const router = Router()
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
-  const deviceWearerController = new DeviceWearerController(service.deviceWearerService)
+  const deviceWearerController = new DeviceWearerController(services.deviceWearerService, services.deviceService)
 
   // Home
   get('/', (req, res, next) => {

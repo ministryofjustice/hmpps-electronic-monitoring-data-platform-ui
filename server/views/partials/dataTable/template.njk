@@ -1,0 +1,28 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% set rows = [[ {
+    text: params.emptyTableText if params.emptyTableText else "No results found",
+    colspan: params.columns | length,
+    classes: "govuk-\!-text-align-centre"
+    } ]]
+  %}
+
+  {% if params.rows | length %}
+    {% set rows = params.rows %}
+  {% endif %}
+
+  {% set columns = [] %}
+
+  {% for column in params.columns %}
+    {% set columns = (columns.push(
+      {
+        text: column
+      }
+    ), columns) %}
+  {% endfor %}
+
+  {{ govukTable({
+    head: columns,
+    rows: rows
+  }) }}
+

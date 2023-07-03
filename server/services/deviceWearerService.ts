@@ -1,7 +1,4 @@
-// const axios = require('axios')
-
 import RestClient from '../data/restClient'
-// import config from '../config'
 import logger from '../../logger'
 import { DeviceWearerResponse } from '../data_models/deviceWearer'
 
@@ -21,6 +18,7 @@ export default class DeviceWearerService {
       logger.error({ err: e }, 'failed to fetch')
       throw e
     }
+
     return result
   }
 
