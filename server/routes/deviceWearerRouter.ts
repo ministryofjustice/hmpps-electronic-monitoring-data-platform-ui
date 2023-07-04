@@ -11,8 +11,8 @@ export default function deviceWearerRoutes(services: Services): Router {
   const deviceWearerController = new DeviceWearerController(services.deviceWearerService, services.deviceService)
 
   // DeviceWearer routes
-  get('', (req: AuthenticatedRequest, res) => deviceWearerController.listDeviceWearers(req, res))
-  get('id/:deviceWearerId', (req: AuthenticatedRequest, res) => deviceWearerController.viewDeviceWearer(req, res))
+  get('/', (req: AuthenticatedRequest, res) => deviceWearerController.listDeviceWearers(req, res))
+  get('/id/:deviceWearerId', (req: AuthenticatedRequest, res) => deviceWearerController.viewDeviceWearer(req, res))
 
   return router
 }

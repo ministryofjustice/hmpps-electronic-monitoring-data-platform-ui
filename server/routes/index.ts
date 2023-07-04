@@ -13,7 +13,7 @@ export default function routes(services: Services): Router {
   get('/', (req, res, next) => {
     res.render('pages/index')
   })
-  router.use('/device-wearers/', deviceWearerRoutes(services))
+  router.use('/device-wearers', deviceWearerRoutes(services))
 
   return router
 }
