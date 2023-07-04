@@ -4,6 +4,7 @@ import DeviceWearerService from './deviceWearerService'
 import RestClient from '../data/restClient'
 import config from '../config'
 import DeviceService from './deviceService'
+import LocationService from "./locationService";
 
 export const services = () => {
   const { hmppsAuthClient, applicationInfo } = dataAccess()
@@ -12,13 +13,15 @@ export const services = () => {
 
   const userService = new UserService(hmppsAuthClient)
   const deviceWearerService = new DeviceWearerService(dataPlatformApi)
-  const deviceService = new DeviceService()
+  const deviceService = new DeviceService(dataPlatformApi)
+  const locationService = new LocationService(dataPlatformApi)
 
   return {
     applicationInfo,
     userService,
     deviceWearerService,
     deviceService,
+    locationService,
   }
 }
 
