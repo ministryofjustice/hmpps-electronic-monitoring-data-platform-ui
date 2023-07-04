@@ -19,9 +19,9 @@ describe('DeviceService', () => {
     it('should throw for a 400 api response', async () => {
       expect.assertions(2)
 
-      fakeDataPlatformApi.get('/devices/').reply(400, 'Bad Request')
-
       const deviceWearerId = '123456789'
+      fakeDataPlatformApi.get(`/devices/v1/device-wearer-id/${deviceWearerId}`).reply(400, 'Bad Request')
+
       const expectedError = `Unable to find devices for ${deviceWearerId}`
       const expected = new Error(expectedError)
       const result = deviceService.findByDeviceWearer('', deviceWearerId)
@@ -33,9 +33,9 @@ describe('DeviceService', () => {
     it('should retry twice for a 500 api response', async () => {
       expect.assertions(2)
 
-      fakeDataPlatformApi.get('/devices/').times(3).reply(500)
-
       const deviceWearerId = '123456789'
+      fakeDataPlatformApi.get(`/devices/v1/device-wearer-id/${deviceWearerId}`).times(3).reply(500)
+
       const expectedError = `Unable to find devices for ${deviceWearerId}`
       const expected = new Error(expectedError)
       const result = deviceService.findByDeviceWearer('', deviceWearerId)
@@ -45,7 +45,7 @@ describe('DeviceService', () => {
     })
 
     it('should be okay for no devices to be returned', async () => {
-      fakeDataPlatformApi.get('/devices/').reply(200, { devices: [] })
+      fakeDataPlatformApi.get('/devices/v1/device-wearer-id/').reply(200, { devices: [] })
 
       const result = await deviceService.findByDeviceWearer('', '')
 
@@ -63,7 +63,7 @@ describe('DeviceService', () => {
           dateTagRemoved: '01/01/1970 00:00:00',
         },
       ]
-      fakeDataPlatformApi.get('/devices/').reply(200, {
+      fakeDataPlatformApi.get('/devices/v1/device-wearer-id/').reply(200, {
         devices,
       })
 
@@ -90,7 +90,7 @@ describe('DeviceService', () => {
           dateTagRemoved: '01/01/1970 00:00:00',
         },
       ]
-      fakeDataPlatformApi.get('/devices/').reply(200, {
+      fakeDataPlatformApi.get('/devices/v1/device-wearer-id/').reply(200, {
         devices,
       })
 

@@ -3,7 +3,7 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 
-import deviceWearerRoutes from './DeviceWearerRouter'
+import deviceWearerRoutes from './deviceWearerRouter'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -13,18 +13,7 @@ export default function routes(services: Services): Router {
   get('/', (req, res, next) => {
     res.render('pages/index')
   })
-  router.use(
-    '/device-wearers/',
-    // (rec, rez, next) => {
-    //   logger.info('this is device wearers')
-    //   next()
-    // },
-    // (rec, rez, next) => {
-    //   logger.info('another middleware')
-    //   next()
-    // },
-    deviceWearerRoutes(services),
-  )
+  router.use('/device-wearers/', deviceWearerRoutes(services))
 
   return router
 }
