@@ -1,6 +1,6 @@
 import { BaseErrorModel, BaseSuccessModel } from '.'
-import { DeviceWearer } from '../data_models/deviceWearer'
-import { Device } from '../services/deviceService'
+import DeviceWearer from '../data_models/deviceWearer'
+import Device from '../data_models/device'
 
 // deviceWearers MUST be an empty list if an error occured
 // error MUST be null if there are 0 or more deviceWearers

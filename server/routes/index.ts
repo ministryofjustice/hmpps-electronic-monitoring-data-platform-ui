@@ -4,7 +4,7 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 
 import deviceWearerRoutes from './deviceWearerRouter'
-import deviceRoutes from "./deviceRouter";
+import deviceRoutes from './deviceRouter'
 
 export default function routes(services: Services): Router {
   const router = Router()

@@ -4,9 +4,4 @@ type Location = {
   locationTime: string
 }
 
-type locationResponse = {
-  error: string
-  location: Location[]
-}
-
-export { Location, locationResponse }
+export default Location
