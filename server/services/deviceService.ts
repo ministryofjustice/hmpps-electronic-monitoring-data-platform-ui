@@ -1,9 +1,9 @@
 import config from '../config'
 import RestClient from '../data/restClient'
-import {ApiResponse} from '../utils/utils'
-import {DeviceWearerResponse} from "../data_models/deviceWearer";
-import logger from "../../logger";
-import {Device, DeviceResponse} from '../data_models/device'
+import { ApiResponse } from '../utils/utils'
+// import {DeviceWearerResponse} from "../data_models/deviceWearer";
+// import logger from "../../logger";
+import { Device, DeviceResponse } from '../data_models/device'
 
 // type DeviceType =
 //     | 'Location - fitted'
@@ -25,20 +25,19 @@ import {Device, DeviceResponse} from '../data_models/device'
 export default class DeviceService {
   // private restClient: RestClient
 
-  constructor(injectedRestClient: RestClient) {
-    this.restClient = injectedRestClient
-  }
+  // constructor(injectedRestClient: RestClient) {
+  //   this.restClient = injectedRestClient
+  // }
 
   private restClient(token: string) {
     return new RestClient('Data Platform API Client', config.apis.deviceWearer, token)
-
   }
 
   async findByDeviceWearer(accessToken: string, deviceWearerId: string): Promise<Array<Device>> {
     try {
       const dummyResponse = true
       if (dummyResponse) {
-        return[
+        return [
           {
             deviceId: '8225d883-0fd1-4456-aeba-f7701412d35e',
             deviceType: 'RF',
@@ -65,35 +64,28 @@ export default class DeviceService {
     }
   }
 
-  async findMany(accessToken: string, deviceWearerId: string): Promise<Array<Device>> {
-    let result: DeviceResponse
-    return [
-      {
-        deviceId: '8225d883-0fd1-4456-aeba-f7701412d35e',
-        deviceType: 'RF',
-        status: 'Not fitted',
-        dateTagFitted: 'A',
-        dateTagRemoved: 'Ok',
-      },
-      {
-        deviceId: '8225d883-0fd1-4456-aeba-f7701412d35a',
-        deviceType: 'RF',
-        status: 'Not fitted',
-        dateTagFitted: 'B',
-        dateTagRemoved: 'Ok',
-      },
-    ]
-    // try {
-    //   logger.debug(`calling deviceService.findMany, with searchterm ${searchTerm}`)
-    //   result = (await this.restClient.get({
-    //     path: `/device/v1/device-wearer-id/${deviceWearerId}/search/${searchTerm}`,
-    //   })) as DeviceResponse
-    // } catch (e) {
-    //   logger.error({ err: e }, 'failed to fetch')
-    //   throw e
-    // }
-    // return result
-  }
+  // async findByDeviceId(accessToken: string, deviceId: string): Promise<Array<Device>> {
+  //   let result: DeviceResponse
+  //   return [
+  //     {
+  //       deviceId: '8225d883-0fd1-4456-aeba-f7701412d35e',
+  //       deviceType: 'RF',
+  //       status: 'Not fitted',
+  //       dateTagFitted: 'A',
+  //       dateTagRemoved: 'Ok',
+  //     },
+  //   ]
+  //   // try {
+  //   //   logger.debug(`calling deviceService.findMany, with searchterm ${searchTerm}`)
+  //   //   result = (await this.restClient.get({
+  //   //     path: `/device/v1/device-wearer-id/${deviceWearerId}/search/${searchTerm}`,
+  //   //   })) as DeviceResponse
+  //   // } catch (e) {
+  //   //   logger.error({ err: e }, 'failed to fetch')
+  //   //   throw e
+  //   // }
+  //   // return result
+  // }
 }
 
 // export {Device}

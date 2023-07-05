@@ -20,16 +20,13 @@
       },
       {
         text: location.locationTime
-      },
-      {
-        html: '<a href="/device-wearers/id/' + location.latitude + '">View</a>'
       }
     ]), rows) %}
 {% endfor %}
 
 {% block beforeContent %}
   {{ super() }}
-  {{ govukBackLink({ href: "/", text: "Back" }) }}
+  {{ govukBackLink({ href: backLink, text: "Back" }) }}
 {% endblock %}
 
 {% block content %}
@@ -42,6 +39,9 @@
     }) }}
 
   {% endif %}
+
+  <h1 class="govuk-heading-xl">Location data for selected device</h1>
+  <span class="govuk-caption-xl">{{ deviceId }}</span>
 
   {{
     dataTable({

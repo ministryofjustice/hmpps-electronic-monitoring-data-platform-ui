@@ -10,8 +10,9 @@ export default function deviceRoutes(services: Services): Router {
 
   const deviceController = new DeviceController(services.locationService)
 
-  // DeviceWearer routes
-  get('/:deviceWearerId', (req: AuthenticatedRequest, res) => deviceController.listLocations(req, res))
+  // Device routes
+  // get('/:deviceWearerId', (req: AuthenticatedRequest, res) => deviceController.listLocations(req, res))
+  get('/:deviceWearerId/:deviceId', (req: AuthenticatedRequest, res) => deviceController.listLocations(req, res))
 
   return router
 }
