@@ -8,7 +8,7 @@ export default function deviceRoutes(services: Services): Router {
   const router = Router()
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
-  const deviceController = new DeviceController(services.locationService)
+  const deviceController = new DeviceController(services.locationService, services.deviceService)
 
   // Device routes
   // get('/:deviceWearerId', (req: AuthenticatedRequest, res) => deviceController.listLocations(req, res))

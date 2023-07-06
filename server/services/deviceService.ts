@@ -37,4 +37,25 @@ export default class DeviceService {
       throw new Error(`Unable to find devices for ${deviceWearerId}`)
     }
   }
+
+  async findDeviceById(token: string, deviceId: string): Promise<Device> {
+    try {
+      const dummyResponse = false
+      if (dummyResponse) {
+        return {
+          deviceId: '8225d883-0fd1-4456-aeba-f7701412d35e',
+          deviceType: 'RF',
+          status: 'Not fitted',
+          dateTagFitted: 'yesterday',
+          dateTagRemoved: 'today',
+        }
+      }
+      const response = await this.restClient(token).get<ApiResponse<'device', Device>>({
+        path: `/devices/v1/device-id/${deviceId}`,
+      })
+      return response.device
+    } catch (err) {
+      throw new Error(`Unable to find device with id ${deviceId}`)
+    }
+  }
 }

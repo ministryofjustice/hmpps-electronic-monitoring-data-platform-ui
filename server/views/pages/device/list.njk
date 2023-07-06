@@ -5,6 +5,7 @@
 {% from "../../partials/dataTable/macro.njk" import dataTable %}
 {% from "../../partials/search.njk" import search %}
 {% extends "../../partials/layout.njk" %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% set pageTitle = applicationName + " - Home" %}
 
@@ -40,8 +41,60 @@
 
   {% endif %}
 
-  <h1 class="govuk-heading-xl">Location data for selected device</h1>
-  <span class="govuk-caption-xl">{{ deviceId }}</span>
+  <h1 class="govuk-heading-xl">Data for selected device</h1>
+  <span class="govuk-caption-xl">{{ device.deviceId }}</span>
+
+  {{ govukSummaryList({
+    card: {
+      title: {
+        text: "Device summary",
+        headingLevel: 2
+      }
+    },
+    rows: [
+      {
+        key: {
+        text: "Device ID"
+      },
+        value: {
+        text: device.deviceId
+      }
+      },
+      {
+        key: {
+        text: "Device Type"
+      },
+        value: {
+        text: device.deviceType
+      }
+      },
+      {
+        key: {
+        text: "Status"
+      },
+        value: {
+        text: device.status
+      }
+      },
+      {
+        key: {
+        text: "Date Tag Fitted"
+      },
+        value: {
+        text: device.dateTagFitted
+      }
+      },
+      {
+        key: {
+        text: "Date Tag Removed"
+      },
+        value: {
+        text: device.dateTagRemoved
+      }
+      }
+    ]
+  })
+  }}
 
   {{
     dataTable({

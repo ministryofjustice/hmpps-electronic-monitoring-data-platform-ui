@@ -1,13 +1,15 @@
 import type { Response } from 'express'
 import { AuthenticatedRequest } from '../authentication/auth'
 import LocationService from '../services/locationService'
-import LocationListViewModel from '../viewModels/location'
+import DeviceDetailViewModel from '../viewModels/device'
+import Device from '../data_models/device'
+import DeviceService from '../services/deviceService'
 
 export default class DeviceController {
-  constructor(private readonly locationService: LocationService) {}
+  constructor(private readonly locationService: LocationService, private readonly deviceService: DeviceService) {}
 
   // Ensure the data passed to the view conforms to the model
-  private renderDeviceLocationListView(res: Response, data: LocationListViewModel): void {
+  private renderDeviceLocationListView(res: Response, data: DeviceDetailViewModel): void {
     res.render('pages/device/list', data)
   }
 
@@ -15,22 +17,21 @@ export default class DeviceController {
     const validatedWearerId = deviceWearerId.toString()
     const validatedDeviceId = deviceId.toString()
     try {
+      const device: Device = await this.deviceService.findDeviceById(user.token, deviceId)
       const locations = await this.locationService.findByDeviceId(user.token, validatedDeviceId)
       this.renderDeviceLocationListView(res, {
         isError: false,
         locations,
-        searchTerm: '',
         backLink: `/device-wearers/id/${validatedWearerId}`,
-        deviceId: validatedDeviceId,
+        device,
       })
     } catch (err) {
       this.renderDeviceLocationListView(res, {
         isError: true,
         error: err.message,
         locations: [],
-        searchTerm: '',
         backLink: `/device-wearers/id/${validatedWearerId}`,
-        deviceId: validatedDeviceId,
+        device: null,
       })
     }
   }
