@@ -1,115 +1,150 @@
-import DeviceWearerService from './deviceWearerService'
-import RestClient from '../data/restClient'
+import nock from 'nock'
 import config from '../config'
-// import {ApiConfig} from "../config";
+import DeviceWearerService from './deviceWearerService'
+import DeviceWearer from '../data_models/deviceWearer'
 
-jest.mock('../data/restClient')
-
-const dummyData = [
-  {
-    deviceWearerId: '123456789',
-    firstName: 'J',
-    lastName: 'Smith',
-    type: 'Curfew',
-  },
-  {
-    deviceWearerId: '987654321',
-    firstName: 'J',
-    lastName: 'Doe',
-    type: 'Inclusion Zone',
-  },
-]
-
-let deviceWearerService: DeviceWearerService
-const accessToken = ''
+// BE CAREFUL THIS IS MOCKING THE CORRECT THING. NOT: jest.mock('../data/restClient')
+jest.mock('../data/hmppsAuthClient')
 
 describe('Device wearer service', () => {
-  const mockRestClient = new RestClient(
-    'Mock Device Wearer Client',
-    config.apis.deviceWearer,
-    null,
-  ) as jest.Mocked<RestClient>
+  let deviceWearerService: DeviceWearerService
+  let fakeDataPlatformApi: nock.Scope
+  const accessToken = ''
+  const dummyData: DeviceWearer[] = [
+    {
+      deviceWearerId: '123456789',
+      firstName: 'J',
+      lastName: 'Smith',
+      type: 'Curfew',
+    },
+    {
+      deviceWearerId: '987654321',
+      firstName: 'J',
+      lastName: 'Doe',
+      type: 'Inclusion Zone',
+    },
+  ]
+
+  beforeEach(() => {
+    fakeDataPlatformApi = nock(config.apis.deviceWearer.url)
+    deviceWearerService = new DeviceWearerService()
+  })
 
   describe('findOne', () => {
     it('retrieves one device wearer when deviceWearerId exists', async () => {
       const testId = '987654321'
-      jest.spyOn(mockRestClient, 'get').mockImplementation(async input => {
-        if (input.path === `/device-wearers/v1/id/${testId}`) {
-          return { error: '', deviceWearers: [dummyData[1]] }
-        }
-        throw new Error('Wrong call to API')
+      const endpointUrl = `/device-wearers/v1/id/${testId}`
+      const expected: DeviceWearer = dummyData[1]
+      let called = 0
+
+      fakeDataPlatformApi.get(endpointUrl).reply(200, () => {
+        called += 1
+        return { error: '', deviceWearers: [dummyData[1]] }
       })
-      deviceWearerService = new DeviceWearerService(mockRestClient)
 
       const result = await deviceWearerService.findOne(accessToken, testId)
 
-      expect(result.deviceWearers[0].deviceWearerId).toEqual(testId)
-      expect(result.deviceWearers[0]).toEqual(dummyData[1])
+      expect(result.deviceWearerId).toEqual(testId)
+      expect(result).toEqual(expected)
+      expect(fakeDataPlatformApi.isDone()).toBeTruthy()
+      expect(called).toBe(1)
     })
 
     it('returns "No user found" error when deviceWearerId does not exist', async () => {
-      const testId = 'this is a totally fake ID'
-      const expectedError = 'No user found'
-      jest.spyOn(mockRestClient, 'get').mockImplementation(async input => {
-        if (input.path === `/device-wearers/v1/id/${testId}`) {
-          return { error: expectedError, deviceWearers: [] }
-        }
-        throw new Error('Wrong call to API')
+      const testId = 'This-is-a-totally-fake-Id'
+      const endpointUrl = `/device-wearers/v1/id/${testId}`
+      const expectedError = `No user found with ID ${testId}`
+      const expected = new Error(expectedError)
+      let called = 0
+
+      fakeDataPlatformApi.get(endpointUrl).reply(200, () => {
+        called += 1
+        return { error: '', deviceWearers: [], message: 'No data found' }
       })
-      deviceWearerService = new DeviceWearerService(mockRestClient)
 
-      const result = await deviceWearerService.findOne(accessToken, testId /* req.query.searchTerm */)
+      const result = deviceWearerService.findOne(accessToken, testId)
 
-      expect(result.error).toEqual(expectedError)
+      await expect(result).rejects.toMatchObject(expected)
+      expect(fakeDataPlatformApi.isDone()).toBeTruthy()
+      expect(called).toBe(1)
+    })
+
+    it('returns "Duplicate users found" error if multiple results returned from API', async () => {
+      const testId = 'This-is-a-duplicate-Id'
+      const endpointUrl = `/device-wearers/v1/id/${testId}`
+      const expectedError = `Duplicate users found with ID ${testId}`
+      const expected = new Error(expectedError)
+      let called = 0
+
+      fakeDataPlatformApi.get(endpointUrl).reply(200, () => {
+        called += 1
+        return { error: '', deviceWearers: dummyData, message: '' }
+      })
+
+      const result = deviceWearerService.findOne(accessToken, testId)
+
+      await expect(result).rejects.toMatchObject(expected)
+      expect(fakeDataPlatformApi.isDone()).toBeTruthy()
+      expect(called).toBe(1)
     })
   })
 
   describe('findMany', () => {
     it('retrieves all device wearers when no search term is provided', async () => {
       const searchTerm = ''
-      jest.spyOn(mockRestClient, 'get').mockImplementation(async input => {
-        if (input.path === `/device-wearers/v1`) {
-          return { error: '', deviceWearers: dummyData }
-        }
-        throw new Error('Wrong call to API')
+      const endpointUrl = '/device-wearers/v1'
+      const expected: Array<DeviceWearer> = dummyData
+      let called = 0
+
+      fakeDataPlatformApi.get(endpointUrl).reply(200, () => {
+        called += 1
+        return { error: '', deviceWearers: dummyData }
       })
-      deviceWearerService = new DeviceWearerService(mockRestClient)
 
       const result = await deviceWearerService.findMany(accessToken, searchTerm)
 
-      expect(result.error).toEqual('')
-      expect(result.deviceWearers).toEqual(dummyData)
-      expect(result.deviceWearers.length).toEqual(2)
+      expect(result).toEqual(expected)
+      expect(result.length).toEqual(expected.length)
+      expect(fakeDataPlatformApi.isDone()).toBeTruthy()
+      expect(called).toBe(1)
     })
+
     it('retrieves only one device wearer when one matches search term', async () => {
       const searchTerm = 'Curfew'
-      jest.spyOn(mockRestClient, 'get').mockImplementation(async input => {
-        if (input.path === `/device-wearers/v2/search/${searchTerm}`) {
-          return { error: '', deviceWearers: dummyData[0] }
-        }
-        throw new Error('Wrong call to API')
+      const endpointUrl = `/device-wearers/v2/search/${searchTerm}`
+      const expected: Array<DeviceWearer> = [dummyData[0]]
+      let called = 0
+
+      fakeDataPlatformApi.get(endpointUrl).reply(200, () => {
+        called += 1
+        return { error: '', deviceWearers: [dummyData[0]] }
       })
-      deviceWearerService = new DeviceWearerService(mockRestClient)
 
       const result = await deviceWearerService.findMany(accessToken, searchTerm)
 
-      expect(result.error).toEqual('')
-      expect(result.deviceWearers).toEqual(dummyData[0])
+      expect(result).toEqual(expected)
+      expect(result.length).toEqual(expected.length)
+      expect(fakeDataPlatformApi.isDone()).toBeTruthy()
+      expect(called).toBe(1)
     })
+
     it('returns "No matching users found" error when there are no matching results', async () => {
-      const searchTerm = 'Cheese is my favourite food'
-      const expectedError = 'No matching users found'
-      jest.spyOn(mockRestClient, 'get').mockImplementation(async input => {
-        if (input.path === `/device-wearers/v2/search/${searchTerm}`) {
-          return { error: expectedError, deviceWearers: [] }
-        }
-        throw new Error('Wrong call to API')
+      const searchTerm = 'Cheesecake'
+      const endpointUrl = `/device-wearers/v2/search/${searchTerm}`
+      const expectedError = `No matching users found with search term ${searchTerm}`
+      const expected = new Error(expectedError)
+      let called = 0
+
+      fakeDataPlatformApi.get(endpointUrl).reply(200, () => {
+        called += 1
+        return { error: '', deviceWearers: [], message: '' }
       })
-      deviceWearerService = new DeviceWearerService(mockRestClient)
 
-      const result = await deviceWearerService.findMany(accessToken, searchTerm)
+      const result = deviceWearerService.findMany(accessToken, searchTerm)
 
-      expect(result.error).toEqual(expectedError)
+      await expect(result).rejects.toMatchObject(expected)
+      expect(fakeDataPlatformApi.isDone()).toBeTruthy()
+      expect(called).toBe(1)
     })
   })
 })

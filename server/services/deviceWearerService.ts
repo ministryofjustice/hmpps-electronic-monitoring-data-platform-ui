@@ -10,19 +10,22 @@ export default class DeviceWearerService {
   }
 
   async findOne(accessToken: string, deviceWearerId: string): Promise<DeviceWearer> {
-    let result: DeviceWearer
     try {
       logger.debug(`calling deviceWearerService.findOne`)
-
-      const response = await this.restClient(accessToken).get<ApiResponse<'deviceWearer', DeviceWearer>>({
+      const response = await this.restClient(accessToken).get<ApiResponse<'deviceWearers', DeviceWearer[]>>({
         path: `/device-wearers/v1/id/${deviceWearerId}`,
       })
-      result = response.deviceWearer
+      if (response.deviceWearers.length === 0) {
+        throw new Error(`No user found with ID ${deviceWearerId}`)
+      }
+      if (response.deviceWearers.length !== 1) {
+        throw new Error(`Duplicate users found with ID ${deviceWearerId}`)
+      }
+      return response.deviceWearers[0]
     } catch (e) {
-      logger.error({ err: e }, 'failed to fetch')
+      logger.error({ err: e }, `Failure in DeviceWearerService.findOne with deviceWearerId ${deviceWearerId}`)
       throw e
     }
-    return result
   }
 
   async findMany(accessToken: string, searchTerm: string = null): Promise<Array<DeviceWearer>> {
@@ -30,18 +33,21 @@ export default class DeviceWearerService {
     try {
       logger.debug(`calling deviceWearerService.findMany, with searchterm ${searchTerm}`)
       if (searchTerm) {
-        const response = await this.restClient(accessToken).get<ApiResponse<'deviceWearer', DeviceWearer[]>>({
+        const response = await this.restClient(accessToken).get<ApiResponse<'deviceWearers', DeviceWearer[]>>({
           path: `/device-wearers/v2/search/${searchTerm}`,
         })
-        result = response.deviceWearer
+        if (response.deviceWearers.length === 0) {
+          throw new Error(`No matching users found with search term ${searchTerm}`)
+        }
+        result = response.deviceWearers
       } else {
-        const response = await this.restClient(accessToken).get<ApiResponse<'deviceWearer', DeviceWearer[]>>({
+        const response = await this.restClient(accessToken).get<ApiResponse<'deviceWearers', DeviceWearer[]>>({
           path: `/device-wearers/v1`,
         })
-        result = response.deviceWearer
+        result = response.deviceWearers
       }
     } catch (e) {
-      logger.error({ err: e }, 'failed to fetch')
+      logger.error({ err: e }, `Failure in DeviceWearerService.findMany with searchterm ${searchTerm}`)
       throw e
     }
     return result

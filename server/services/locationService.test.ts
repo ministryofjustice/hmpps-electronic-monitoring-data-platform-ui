@@ -3,6 +3,7 @@ import config from '../config'
 import LocationService from './locationService'
 import Location from '../data_models/location'
 
+// BE CAREFUL THIS IS MOCKING THE CORRECT THING. NOT: jest.mock('../data/restClient')
 jest.mock('../data/hmppsAuthClient')
 
 describe('location service', () => {
