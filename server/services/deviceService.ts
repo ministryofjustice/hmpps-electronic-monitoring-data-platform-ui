@@ -10,25 +10,6 @@ export default class DeviceService {
 
   async findByDeviceWearer(accessToken: string, deviceWearerId: string): Promise<Array<Device>> {
     try {
-      const dummyResponse = false
-      if (dummyResponse) {
-        return [
-          {
-            deviceId: '8225d883-0fd1-4456-aeba-f7701412d35e',
-            deviceType: 'RF',
-            status: 'Not fitted',
-            dateTagFitted: 'yesterday',
-            dateTagRemoved: 'today',
-          },
-          {
-            deviceId: '8225d883-0fd1-4456-aeba-f7701412d35a',
-            deviceType: 'RF',
-            status: 'Not fitted',
-            dateTagFitted: '2008-11-10',
-            dateTagRemoved: '2022-05-05',
-          },
-        ]
-      }
       const response = await this.restClient(accessToken).get<ApiResponse<'devices', Device[]>>({
         path: `/devices/v1/device-wearer-id/${deviceWearerId}`,
       })
@@ -40,16 +21,6 @@ export default class DeviceService {
 
   async findDeviceById(token: string, deviceId: string): Promise<Device> {
     try {
-      const dummyResponse = false
-      if (dummyResponse) {
-        return {
-          deviceId: '8225d883-0fd1-4456-aeba-f7701412d35e',
-          deviceType: 'RF',
-          status: 'Not fitted',
-          dateTagFitted: 'yesterday',
-          dateTagRemoved: 'today',
-        }
-      }
       const response = await this.restClient(token).get<ApiResponse<'device', Device>>({
         path: `/devices/v1/device-id/${deviceId}`,
       })

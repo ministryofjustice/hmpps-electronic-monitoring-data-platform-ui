@@ -10,7 +10,7 @@ export default class DeviceController {
 
   // Ensure the data passed to the view conforms to the model
   private renderDeviceLocationListView(res: Response, data: DeviceDetailViewModel): void {
-    res.render('pages/device/list', data)
+    res.render('pages/device/detail', data)
   }
 
   async listLocations({ user, params: { deviceWearerId, deviceId } }: AuthenticatedRequest, res: Response) {
