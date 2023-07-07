@@ -23,10 +23,10 @@ describe('GET /', () => {
   })
 })
 
-describe('GET /id/deviceWearerId', () => {
+describe('GET /deviceWearerId', () => {
   it('device wearer summary page', () => {
     return request(app)
-      .get('/device-wearers/id/3fc55bb7-ba52-4854-be96-661f710328fc')
+      .get('/device-wearers/3fc55bb7-ba52-4854-be96-661f710328fc')
       .expect('Content-Type', /html/)
       .expect(res => {
         expect(res.text).toContain('Device wearer summary')

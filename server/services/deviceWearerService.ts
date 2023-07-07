@@ -36,9 +36,6 @@ export default class DeviceWearerService {
         const response = await this.restClient(accessToken).get<ApiResponse<'deviceWearers', DeviceWearer[]>>({
           path: `/device-wearers/v2/search/${searchTerm}`,
         })
-        if (response.deviceWearers.length === 0) {
-          throw new Error(`No matching users found with search term ${searchTerm}`)
-        }
         result = response.deviceWearers
       } else {
         const response = await this.restClient(accessToken).get<ApiResponse<'deviceWearers', DeviceWearer[]>>({

@@ -35,10 +35,8 @@ describe('Device wearer service', () => {
       const testId = '987654321'
       const endpointUrl = `/device-wearers/v1/id/${testId}`
       const expected: DeviceWearer = dummyData[1]
-      let called = 0
 
       fakeDataPlatformApi.get(endpointUrl).reply(200, () => {
-        called += 1
         return { error: '', deviceWearers: [dummyData[1]] }
       })
 
@@ -47,7 +45,6 @@ describe('Device wearer service', () => {
       expect(result.deviceWearerId).toEqual(testId)
       expect(result).toEqual(expected)
       expect(fakeDataPlatformApi.isDone()).toBeTruthy()
-      expect(called).toBe(1)
     })
 
     it('returns "No user found" error when deviceWearerId does not exist', async () => {
@@ -55,10 +52,8 @@ describe('Device wearer service', () => {
       const endpointUrl = `/device-wearers/v1/id/${testId}`
       const expectedError = `No user found with ID ${testId}`
       const expected = new Error(expectedError)
-      let called = 0
 
       fakeDataPlatformApi.get(endpointUrl).reply(200, () => {
-        called += 1
         return { error: '', deviceWearers: [], message: 'No data found' }
       })
 
@@ -66,7 +61,6 @@ describe('Device wearer service', () => {
 
       await expect(result).rejects.toMatchObject(expected)
       expect(fakeDataPlatformApi.isDone()).toBeTruthy()
-      expect(called).toBe(1)
     })
 
     it('returns "Duplicate users found" error if multiple results returned from API', async () => {
@@ -74,10 +68,8 @@ describe('Device wearer service', () => {
       const endpointUrl = `/device-wearers/v1/id/${testId}`
       const expectedError = `Duplicate users found with ID ${testId}`
       const expected = new Error(expectedError)
-      let called = 0
 
       fakeDataPlatformApi.get(endpointUrl).reply(200, () => {
-        called += 1
         return { error: '', deviceWearers: dummyData, message: '' }
       })
 
@@ -85,7 +77,6 @@ describe('Device wearer service', () => {
 
       await expect(result).rejects.toMatchObject(expected)
       expect(fakeDataPlatformApi.isDone()).toBeTruthy()
-      expect(called).toBe(1)
     })
   })
 
@@ -94,10 +85,8 @@ describe('Device wearer service', () => {
       const searchTerm = ''
       const endpointUrl = '/device-wearers/v1'
       const expected: Array<DeviceWearer> = dummyData
-      let called = 0
 
       fakeDataPlatformApi.get(endpointUrl).reply(200, () => {
-        called += 1
         return { error: '', deviceWearers: dummyData }
       })
 
@@ -106,17 +95,14 @@ describe('Device wearer service', () => {
       expect(result).toEqual(expected)
       expect(result.length).toEqual(expected.length)
       expect(fakeDataPlatformApi.isDone()).toBeTruthy()
-      expect(called).toBe(1)
     })
 
     it('retrieves only one device wearer when one matches search term', async () => {
       const searchTerm = 'Curfew'
       const endpointUrl = `/device-wearers/v2/search/${searchTerm}`
       const expected: Array<DeviceWearer> = [dummyData[0]]
-      let called = 0
 
       fakeDataPlatformApi.get(endpointUrl).reply(200, () => {
-        called += 1
         return { error: '', deviceWearers: [dummyData[0]] }
       })
 
@@ -125,26 +111,22 @@ describe('Device wearer service', () => {
       expect(result).toEqual(expected)
       expect(result.length).toEqual(expected.length)
       expect(fakeDataPlatformApi.isDone()).toBeTruthy()
-      expect(called).toBe(1)
     })
 
-    it('returns "No matching users found" error when there are no matching results', async () => {
-      const searchTerm = 'Cheesecake'
-      const endpointUrl = `/device-wearers/v2/search/${searchTerm}`
-      const expectedError = `No matching users found with search term ${searchTerm}`
-      const expected = new Error(expectedError)
-      let called = 0
+    it('retrieves an empty list when there are no matching results', async () => {
+      const searchTerm = 'obviously not real'
+      const endpointUrl = `/device-wearers/v2/search/${encodeURIComponent(searchTerm)}`
+      const expected: Array<DeviceWearer> = []
 
       fakeDataPlatformApi.get(endpointUrl).reply(200, () => {
-        called += 1
-        return { error: '', deviceWearers: [], message: '' }
+        return { error: '', deviceWearers: [] }
       })
 
-      const result = deviceWearerService.findMany(accessToken, searchTerm)
+      const result = await deviceWearerService.findMany(accessToken, searchTerm)
 
-      await expect(result).rejects.toMatchObject(expected)
+      expect(result).toEqual(expected)
+      expect(result.length).toEqual(expected.length)
       expect(fakeDataPlatformApi.isDone()).toBeTruthy()
-      expect(called).toBe(1)
     })
   })
 })
