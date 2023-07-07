@@ -1,0 +1,107 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "moj/components/banner/macro.njk" import mojBanner %}
+{% from "../../partials/dataTable/macro.njk" import dataTable %}
+{% from "../../partials/search.njk" import search %}
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% set pageTitle = applicationName + " - Home" %}
+
+{% set rows = [] %}
+
+{% for location in locations %}
+    {% set rows = (rows.push([
+      {
+        text: location.latitude
+      },
+      {
+        text: location.longitude
+      },
+      {
+        text: location.locationTime
+      }
+    ]), rows) %}
+{% endfor %}
+
+{% block beforeContent %}
+  {{ super() }}
+  {{ govukBackLink({ href: backLink, text: "Back" }) }}
+{% endblock %}
+
+{% block content %}
+
+  {%if isError %}
+
+    {{ mojBanner({
+      text: error,
+      type: 'warning'
+    }) }}
+
+  {% endif %}
+
+  <h1 class="govuk-heading-xl">Data for selected device</h1>
+  <span class="govuk-caption-xl">{{ device.deviceId }}</span>
+
+  {{ govukSummaryList({
+    card: {
+      title: {
+        text: "Device summary",
+        headingLevel: 2
+      }
+    },
+    rows: [
+      {
+        key: {
+        text: "Device ID"
+      },
+        value: {
+        text: device.deviceId
+      }
+      },
+      {
+        key: {
+        text: "Device Type"
+      },
+        value: {
+        text: device.deviceType
+      }
+      },
+      {
+        key: {
+        text: "Status"
+      },
+        value: {
+        text: device.status
+      }
+      },
+      {
+        key: {
+        text: "Date Tag Fitted"
+      },
+        value: {
+        text: device.dateTagFitted
+      }
+      },
+      {
+        key: {
+        text: "Date Tag Removed"
+      },
+        value: {
+        text: device.dateTagRemoved
+      }
+      }
+    ]
+  })
+  }}
+
+  {{
+    dataTable({
+      columns: ["Latitude", "Longitude", "Location Time"],
+      rows: rows,
+      emptyTableText: "No matching results"
+    })
+  }}
+
+{% endblock %}

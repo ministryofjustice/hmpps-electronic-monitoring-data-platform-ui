@@ -22,9 +22,9 @@ export default class DeviceWearerController {
 
   async listDeviceWearers({ user, query: { search = '' } }: AuthenticatedRequest, res: Response) {
     try {
-      const deviceWearerResponse = await this.deviceWearerService.findMany(user.token, search.toString())
+      const deviceWearers = await this.deviceWearerService.findMany(user.token, search.toString())
       this.renderDeviceWearerListView(res, {
-        deviceWearers: deviceWearerResponse.deviceWearers,
+        deviceWearers,
         isError: false,
         searchTerm: search.toString(),
       })
@@ -47,13 +47,13 @@ export default class DeviceWearerController {
 
       if (deviceWearerResult.status === 'fulfilled' && devicesResult.status === 'fulfilled') {
         this.renderDeviceWearerDetailView(res, {
-          deviceWearer: deviceWearerResult.value.deviceWearers[0],
+          deviceWearer: deviceWearerResult.value,
           devices: devicesResult.value,
           isError: false,
         })
       } else if (deviceWearerResult.status === 'fulfilled') {
         this.renderDeviceWearerDetailView(res, {
-          deviceWearer: deviceWearerResult.value.deviceWearers[0],
+          deviceWearer: deviceWearerResult.value,
           error: (devicesResult as PromiseRejectedResult).reason,
           isError: true,
         })

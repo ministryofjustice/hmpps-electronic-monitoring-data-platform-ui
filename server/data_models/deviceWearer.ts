@@ -5,9 +5,4 @@ type DeviceWearer = {
   type: string
 }
 
-type DeviceWearerResponse = {
-  error: string
-  deviceWearers: DeviceWearer[]
-}
-
-export { DeviceWearer, DeviceWearerResponse }
+export default DeviceWearer

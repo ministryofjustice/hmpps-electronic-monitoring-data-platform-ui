@@ -9,10 +9,10 @@
 
 {% set pageTitle = applicationName + " - Home" %}
 
-{% set rows = [] %}
+{% set deviceRows = [] %}
 
 {% for device in devices %}
-    {% set rows = (rows.push([
+    {% set deviceRows = (deviceRows.push([
       {
         text: device.deviceId
       },
@@ -29,9 +29,9 @@
         text: device.dateTagRemoved
       },
       {
-        html: '<a href="/device/' + deviceWearer.deviceWearerId + '">View</a>'
+        html: '<a href="/device/' + deviceWearer.deviceWearerId + '/' + device.deviceId +'">View</a>'
       }
-    ]), rows) %}
+    ]), deviceRows) %}
 {% endfor %}
 
 {% block beforeContent %}
@@ -109,7 +109,7 @@
   {{
     dataTable({
       columns: ["Device ID", "Device Type", "Status", "Date Tag Fitted", "Date Tag Removed", "Actions"],
-      rows: rows
+      rows: deviceRows
     })
   }}
 
