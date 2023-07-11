@@ -22,7 +22,7 @@ export default class DeviceService {
   async findDeviceById(token: string, deviceId: string): Promise<Device> {
     try {
       const response = await this.restClient(token).get<ApiResponse<'device', Device>>({
-        path: `/devices/v1/device-id/${deviceId}`,
+        path: `/devices/v1/device-wearer-id/${deviceId}`,
       })
       return response.device
     } catch (err) {

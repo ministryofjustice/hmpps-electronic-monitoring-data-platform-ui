@@ -10,7 +10,6 @@
 {% set pageTitle = applicationName + " - Home" %}
 
 {% set rows = [] %}
-
 {% for location in locations %}
     {% set rows = (rows.push([
       {
@@ -95,7 +94,13 @@
     ]
   })
   }}
-
+  <form action= {{ searchUrl }}>
+    <label for="startDate">start date:</label>
+    <input type="datetime-local" id="startDate" name="startDate" value = {{startDate}} >
+    <label for="birthdaytime">end date :</label>
+    <input type="datetime-local" id="endDate" name="endDate" value = {{endDate}}>
+    <input type="submit">
+  </form>
   {{
     dataTable({
       columns: ["Latitude", "Longitude", "Location Time"],

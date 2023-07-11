@@ -37,7 +37,7 @@ describe('location service', () => {
         return { error: '', location: dummyData }
       })
 
-      const result = await service.findByDeviceId(accessToken, deviceId)
+      const result = await service.findByDeviceIdAndDateRange(accessToken, deviceId)
 
       expect(result).toEqual(expected)
       expect(fakeDataPlatformApi.isDone()).toBeTruthy()
@@ -50,7 +50,7 @@ describe('location service', () => {
 
       const expectedError = `Unable to find locations for ${deviceId}`
       const expected = new Error(expectedError)
-      const result = service.findByDeviceId('', deviceId)
+      const result = service.findByDeviceIdAndDateRange('', deviceId)
 
       await expect(result).rejects.toMatchObject(expected)
       expect(fakeDataPlatformApi.isDone()).toBeTruthy()
@@ -62,7 +62,7 @@ describe('location service', () => {
         called += 1
         return { error: '', location: [] }
       })
-      const result = await service.findByDeviceId(accessToken, deviceId)
+      const result = await service.findByDeviceIdAndDateRange(accessToken, deviceId)
 
       expect(result).toEqual(expected)
       expect(fakeDataPlatformApi.isDone()).toBeTruthy()

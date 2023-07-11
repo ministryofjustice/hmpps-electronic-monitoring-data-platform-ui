@@ -13,17 +13,40 @@ export default class DeviceController {
     res.render('pages/device/detail', data)
   }
 
-  async listLocations({ user, params: { deviceWearerId, deviceId } }: AuthenticatedRequest, res: Response) {
+  async listLocations(
+    { user, params: { deviceWearerId, deviceId }, query: { startDate = '', endDate = '' } }: AuthenticatedRequest,
+    res: Response,
+  ) {
     const validatedWearerId = deviceWearerId.toString()
     const validatedDeviceId = deviceId.toString()
+
+    const validStartDate = startDate ? startDate.toString() : '' // AddYears(-7, new Date()).toISOString().slice(0, 16)
+    const validEndDate = endDate ? endDate.toString() : '' // new Date().toISOString().slice(0, 16)
+
     try {
-      const device: Device = await this.deviceService.findDeviceById(user.token, deviceId)
-      const locations = await this.locationService.findByDeviceId(user.token, validatedDeviceId)
+      // const device: Device = await this.deviceService.findDeviceById(user.token, deviceId)
+      const device: Device = {
+        deviceId,
+        deviceType: 'Location - fitted',
+        status: 'Fitted',
+        dateTagFitted: new Date().toISOString().slice(0, 16),
+        dateTagRemoved: new Date().toISOString().slice(0, 16),
+      }
+
+      const locations = await this.locationService.findByDeviceIdAndDateRange(
+        user.token,
+        validatedDeviceId,
+        validStartDate,
+        validEndDate,
+      )
       this.renderDeviceLocationListView(res, {
         isError: false,
         locations,
         backLink: `/device-wearers/id/${validatedWearerId}`,
         device,
+        searchUrl: `/device/${deviceWearerId}/${deviceId}`,
+        startDate: validStartDate,
+        endDate: validEndDate,
       })
     } catch (err) {
       this.renderDeviceLocationListView(res, {
@@ -32,6 +55,9 @@ export default class DeviceController {
         locations: [],
         backLink: `/device-wearers/id/${validatedWearerId}`,
         device: null,
+        searchUrl: `/device/${deviceWearerId}/${deviceId}`,
+        startDate: validStartDate,
+        endDate: validEndDate,
       })
     }
   }

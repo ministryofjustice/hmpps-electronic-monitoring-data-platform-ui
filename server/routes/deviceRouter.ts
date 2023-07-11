@@ -3,6 +3,7 @@ import { Services } from '../services'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import DeviceController from './deviceController'
 import { AuthenticatedRequest } from '../authentication/auth'
+// import { post } from 'superagent'
 
 export default function deviceRoutes(services: Services): Router {
   const router = Router()
