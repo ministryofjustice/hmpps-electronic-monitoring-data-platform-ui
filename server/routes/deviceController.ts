@@ -24,15 +24,7 @@ export default class DeviceController {
     const validEndDate = endDate ? endDate.toString() : '' // new Date().toISOString().slice(0, 16)
 
     try {
-      // const device: Device = await this.deviceService.findDeviceById(user.token, deviceId)
-      const device: Device = {
-        deviceId,
-        deviceType: 'Location - fitted',
-        status: 'Fitted',
-        dateTagFitted: new Date().toISOString().slice(0, 16),
-        dateTagRemoved: new Date().toISOString().slice(0, 16),
-      }
-
+      const device: Device = await this.deviceService.findDeviceById(user.token, deviceId)
       const locations = await this.locationService.findByDeviceIdAndDateRange(
         user.token,
         validatedDeviceId,
