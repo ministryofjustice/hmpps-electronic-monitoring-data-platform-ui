@@ -36,7 +36,6 @@ export default class DeviceController {
         locations,
         backLink: `/device-wearers/id/${validatedWearerId}`,
         device,
-        searchUrl: `/device/${deviceWearerId}/${deviceId}`,
         startDate: validStartDate,
         endDate: validEndDate,
       })
@@ -47,7 +46,6 @@ export default class DeviceController {
         locations: [],
         backLink: `/device-wearers/id/${validatedWearerId}`,
         device: null,
-        searchUrl: `/device/${deviceWearerId}/${deviceId}`,
         startDate: validStartDate,
         endDate: validEndDate,
       })
