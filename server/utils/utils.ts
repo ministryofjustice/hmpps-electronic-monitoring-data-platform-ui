@@ -30,7 +30,7 @@ export type ApiResponse<K extends string, T> = Prettify<
 
 export type Prettify<T> = {
   [K in keyof T]: T[K]
-} & {}
+} & object
 
 export const AddYears = (years: number, date: Date): Date => {
   const YearOffset = 1000 * 60 * 60 * 24 * 365
