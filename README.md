@@ -19,6 +19,10 @@ If you are **not** pair programming, it's recommended to commit to a short-lived
 
 
 ## Running & deploying the app
+### Pre requisites
+- install homebrew
+- run brew install jq
+
 ### Running the app
 The easiest way to run the app is to use docker compose to create the service and all dependencies. 
 
@@ -85,18 +89,6 @@ Cloud variables are defined in [`helm_deploy`](https://github.com/ministryofjust
 
 ## Authentication
 Obtaining an authentication account: You need to clone [this ticket](https://dsdmoj.atlassian.net/browse/HAAR-1486), changing it to your own name and email, and post in [#hmpps-auth-audit-registers](https://mojdt.slack.com/archives/C02S71KUBED) requesting somebody to add a dev account for you.
-### Disabling authentication
-Running locally, the app may not correctly connect to hmpps-auth authentication (and you may not yet have an account, as detailed above). You can turn off the auth in `server/app.ts`:
-- Comment out:
-  - `app.use(setUpAuthentication())`
-  - `app.use(authorisationMiddleware())`
-  - `app.use(setUpCurrentUser(services))`
-- Uncomment:
-  - ``
-// app.use((req, res, next) => { req.user = { authSource: '', username: '', token: 'abc' } next() })
-``
-- **Do not commit this change to the server**
-
 ## Dependency Checks
 
 The template project has implemented some scheduled checks to ensure that key dependencies are kept up to date.
