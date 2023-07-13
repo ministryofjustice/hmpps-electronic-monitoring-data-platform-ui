@@ -34,10 +34,8 @@ describe('location service', () => {
     const endDate = ''
     it('should call API to get all locations for device Id when start and endDate are empty', async () => {
       const expected = dummyData
-      let called = 0
 
       fakeDataPlatformApi.get(endpointUrl).reply(200, () => {
-        called += 1
         return { error: '', locations: dummyData }
       })
 
@@ -45,7 +43,6 @@ describe('location service', () => {
 
       expect(result).toEqual(expected)
       expect(fakeDataPlatformApi.isDone()).toBeTruthy()
-      expect(called).toBe(1)
     })
     it('should throw for a 400 api response', async () => {
       expect.assertions(2)
@@ -61,16 +58,13 @@ describe('location service', () => {
     })
     it('should be okay for no devices to be returned', async () => {
       const expected: Location[] = []
-      let called = 0
       fakeDataPlatformApi.get(endpointUrl).reply(200, () => {
-        called += 1
         return { error: '', locations: [] }
       })
       const result = await service.findByDeviceIdAndDateRange(accessToken, deviceId, startDate, endDate)
 
       expect(result).toEqual(expected)
       expect(fakeDataPlatformApi.isDone()).toBeTruthy()
-      expect(called).toBe(1)
     })
   })
 })
