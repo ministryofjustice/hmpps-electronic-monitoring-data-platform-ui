@@ -20,8 +20,8 @@ export default class DeviceController {
     const validatedWearerId = deviceWearerId.toString()
     const validatedDeviceId = deviceId.toString()
 
-    const validStartDate = startDate ? startDate.toString() : '' // AddYears(-7, new Date()).toISOString().slice(0, 16)
-    const validEndDate = endDate ? endDate.toString() : '' // new Date().toISOString().slice(0, 16)
+    const validStartDate = startDate ? startDate.toString() : ''
+    const validEndDate = endDate ? endDate.toString() : ''
 
     try {
       const device: Device = await this.deviceService.findDeviceById(user.token, deviceId)
