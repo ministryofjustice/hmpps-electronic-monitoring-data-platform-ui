@@ -18,7 +18,7 @@ describe('GET /device/deviceWearerId/deviceId', () => {
       .get('/device/3fc55bb7-ba52-4854-be96-661f710328fc/8225d883-0fd1-4456-aeba-f7701412d35e')
       .expect('Content-Type', /html/)
       .expect(res => {
-        expect(res.text).toContain('Data for selected device')
+        expect(res.text).toContain('Device summary')
       })
   })
 })

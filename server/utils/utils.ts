@@ -41,7 +41,7 @@ export const AddYears = (years: number, date: Date): Date => {
   return tempDate
 }
 
-export const isSanitisedError = (error: any): error is SanitisedError => {
+export const isSanitisedError = (error: unknown): error is SanitisedError => {
   if (typeof error === 'string') {
     return false
   }
