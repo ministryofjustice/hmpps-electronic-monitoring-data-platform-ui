@@ -13,17 +13,31 @@ export default class DeviceController {
     res.render('pages/device/detail', data)
   }
 
-  async listLocations({ user, params: { deviceWearerId, deviceId } }: AuthenticatedRequest, res: Response) {
+  async listLocations(
+    { user, params: { deviceWearerId, deviceId }, query: { startDate = '', endDate = '' } }: AuthenticatedRequest,
+    res: Response,
+  ) {
     const validatedWearerId = deviceWearerId.toString()
     const validatedDeviceId = deviceId.toString()
+
+    const validStartDate = startDate ? startDate.toString() : ''
+    const validEndDate = endDate ? endDate.toString() : ''
+
     try {
       const device: Device = await this.deviceService.findDeviceById(user.token, deviceId)
-      const locations = await this.locationService.findByDeviceId(user.token, validatedDeviceId)
+      const locations = await this.locationService.findByDeviceIdAndDateRange(
+        user.token,
+        validatedDeviceId,
+        validStartDate,
+        validEndDate,
+      )
       this.renderDeviceLocationListView(res, {
         isError: false,
         locations,
         backLink: `/device-wearers/id/${validatedWearerId}`,
         device,
+        startDate: validStartDate,
+        endDate: validEndDate,
       })
     } catch (err) {
       this.renderDeviceLocationListView(res, {
@@ -32,6 +46,8 @@ export default class DeviceController {
         locations: [],
         backLink: `/device-wearers/id/${validatedWearerId}`,
         device: null,
+        startDate: validStartDate,
+        endDate: validEndDate,
       })
     }
   }

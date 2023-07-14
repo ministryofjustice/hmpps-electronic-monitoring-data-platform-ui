@@ -50,7 +50,7 @@ describe('Device wearer service', () => {
     it('returns "No user found" error when deviceWearerId does not exist', async () => {
       const testId = 'This-is-a-totally-fake-Id'
       const endpointUrl = `/device-wearers/v1/id/${testId}`
-      const expectedError = `No user found with ID ${testId}`
+      const expectedError = `No device wearer found with ID ${testId}`
       const expected = new Error(expectedError)
 
       fakeDataPlatformApi.get(endpointUrl).reply(200, () => {
@@ -66,7 +66,7 @@ describe('Device wearer service', () => {
     it('returns "Duplicate users found" error if multiple results returned from API', async () => {
       const testId = 'This-is-a-duplicate-Id'
       const endpointUrl = `/device-wearers/v1/id/${testId}`
-      const expectedError = `Duplicate users found with ID ${testId}`
+      const expectedError = `Duplicate device wearer found with ID ${testId}`
       const expected = new Error(expectedError)
 
       fakeDataPlatformApi.get(endpointUrl).reply(200, () => {

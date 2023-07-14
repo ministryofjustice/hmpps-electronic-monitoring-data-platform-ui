@@ -1,6 +1,7 @@
 type Location = {
-  latitude: string
-  longitude: string
+  id: number
+  latitude: number
+  longitude: number
   locationTime: string
 }
 

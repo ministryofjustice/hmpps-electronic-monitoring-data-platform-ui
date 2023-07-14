@@ -13,104 +13,102 @@
 
 {% for device in devices %}
     {% set deviceRows = (deviceRows.push([
-      {
-        text: device.deviceId
-      },
-      {
-        text: device.deviceType
-      },
-      {
-        text: device.status
-      },
-      {
-        text: device.dateTagFitted
-      },
-      {
-        text: device.dateTagRemoved
-      },
-      {
-        html: '<a href="/device/' + deviceWearer.deviceWearerId + '/' + device.deviceId +'">View</a>'
-      }
+        {
+            text: device.deviceId
+        },
+        {
+            text: device.deviceType
+        },
+        {
+            text: device.status
+        },
+        {
+            text: device.dateTagFitted
+        },
+        {
+            text: device.dateTagRemoved
+        },
+        {
+            html: '<a href="/device/' + deviceWearer.deviceWearerId + '/' + device.deviceId +'">View</a>'
+        }
     ]), deviceRows) %}
 {% endfor %}
 
 {% block beforeContent %}
-  {{ govukBackLink({ href: "/device-wearers", text: "Back" }) }}
+    {{ super() }}
+    {{ govukBackLink({ href: "/device-wearers", text: "Back" }) }}
 {% endblock %}
 
 {% block content %}
 
-  {%if isError %}
+    {% if isError %}
 
-    {{ mojBanner({
-      text: error,
-      type: 'warning'
+        {{ mojBanner({
+            text: error,
+            type: 'warning'
+        }) }}
+
+    {% endif %}
+
+    <h1 class="govuk-heading-xl">Device wearer summary</h1>
+
+    {{ govukSummaryList({
+        card: {
+            title: {
+                text: "Device wearer summary",
+                headingLevel: 2
+            },
+            actions: {
+                items: [
+                    {
+                        href: "#",
+                        text: "View all",
+                        visuallyHiddenText: "device wearer details"
+                    }
+                ]
+            }
+        },
+        rows: [
+            {
+                key: {
+                text: "Device Wearer ID"
+            },
+                value: {
+                text: deviceWearer.deviceWearerId
+            }
+            },
+            {
+                key: {
+                text: "First Name"
+            },
+                value: {
+                text: deviceWearer.firstName
+            }
+            },
+            {
+                key: {
+                text: "Last Name"
+            },
+                value: {
+                text: deviceWearer.lastName
+            }
+            },
+            {
+                key: {
+                text: "Type"
+            },
+                value: {
+                text: deviceWearer.type
+            }
+            }
+        ]
     }) }}
 
-  {% endif %}
+    <h2>Devices</h2>
 
-  <span class="govuk-caption-xl">{{ deviceWearer.deviceWearerId }}</span>
-  <h1 class="govuk-heading-xl">{{ deviceWearer.firstName }} {{ deviceWearer.lastName }}</h1>
-
-  {{ govukSummaryList({
-    card: {
-      title: {
-        text: "Device wearer summary",
-        headingLevel: 2
-      },
-      actions: {
-        items: [
-          {
-            href: "#",
-            text: "View all",
-            visuallyHiddenText: "device wearer details"
-          }
-        ]
-      }
-    },
-    rows: [
-        {
-        key: {
-            text: "Device Wearer ID"
-        },
-        value: {
-            text: deviceWearer.deviceWearerId
-        }
-        },
-        {
-        key: {
-            text: "First Name"
-        },
-        value: {
-            text: deviceWearer.firstName
-        }
-        },
-        {
-        key: {
-            text: "Last Name"
-        },
-        value: {
-            text: deviceWearer.lastName
-        }
-        },
-        {
-        key: {
-            text: "Type"
-        },
-        value: {
-            text: deviceWearer.type
-        }
-        }
-    ]
-  }) }}
-
-  <h2>Devices</h2>
-
-  {{
-    dataTable({
-      columns: ["Device ID", "Device Type", "Status", "Date Tag Fitted", "Date Tag Removed", "Actions"],
-      rows: deviceRows
-    })
-  }}
+    {{ dataTable({
+        columns: ["Device ID", "Device Type", "Status", "Date Tag Fitted", "Date Tag Removed", "Actions"],
+        rows: deviceRows
+    }) }}
 
 {% endblock %}

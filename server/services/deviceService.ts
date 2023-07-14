@@ -21,10 +21,10 @@ export default class DeviceService {
 
   async findDeviceById(token: string, deviceId: string): Promise<Device> {
     try {
-      const response = await this.restClient(token).get<ApiResponse<'device', Device>>({
+      const response = await this.restClient(token).get<ApiResponse<'devices', Device[]>>({
         path: `/devices/v1/device-id/${deviceId}`,
       })
-      return response.device
+      return response.devices[0]
     } catch (err) {
       throw new Error(`Unable to find device with id ${deviceId}`)
     }
