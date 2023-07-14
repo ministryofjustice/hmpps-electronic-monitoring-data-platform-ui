@@ -1,3 +1,5 @@
+import { SanitisedError } from '../sanitisedError'
+
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
 
@@ -37,4 +39,11 @@ export const AddYears = (years: number, date: Date): Date => {
   const tempDate = new Date()
   tempDate.setTime(date.getTime() + YearOffset * years)
   return tempDate
+}
+
+export const isSanitisedError = (error: any): error is SanitisedError => {
+  if (typeof error === 'string') {
+    return false
+  }
+  return Object.prototype.hasOwnProperty.call(error, 'text')
 }
