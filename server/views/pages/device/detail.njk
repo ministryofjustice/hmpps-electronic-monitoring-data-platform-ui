@@ -40,8 +40,8 @@
 
   {% endif %}
 
-  <h1 class="govuk-heading-xl">Data for selected device</h1>
-  <span class="govuk-caption-xl">{{ device.deviceId }}</span>
+  <h1 class="govuk-heading-xl">Device summary</h1>
+  <span class="govuk-caption-l">{{ device.deviceId }}</span>
 
   {{ govukSummaryList({
     card: {
@@ -97,10 +97,13 @@
   <form action= "">
     <label for="startDate">start date:</label>
     <input type="datetime-local" id="startDate" name="startDate" value = {{startDate}} >
-    <label for="birthdaytime">end date :</label>
+    <label for="endDate">end date :</label>
     <input type="datetime-local" id="endDate" name="endDate" value = {{endDate}}>
     <input type="submit">
   </form>
+
+  <h2>Locations</h2>
+
   {{
     dataTable({
       columns: ["Latitude", "Longitude", "Location Time"],

@@ -1,9 +1,9 @@
 import AuthenticatedPage from '../authenticatedPage'
 import { PageElement } from '../page'
 
-export default class DeviceWearerDetailsPage extends AuthenticatedPage {
+export default class DeviceDetailsPage extends AuthenticatedPage {
   constructor() {
-    super('Device wearer summary')
+    super('Device summary')
   }
 
   dataTable = (): PageElement => cy.get('.govuk-table')
@@ -18,7 +18,13 @@ export default class DeviceWearerDetailsPage extends AuthenticatedPage {
 
   summaryList = (): PageElement => cy.get('.govuk-summary-card')
 
-  summaryListValues = (): PageElement => this.summaryList().find('div.govuk-summary-list__row')
-
   summaryListHeader = (): PageElement => cy.get('.govuk-summary-card__title')
+
+  dateLabel = (): PageElement => cy.get('label')
+
+  submitButton = (): PageElement => cy.get('input[type=submit]')
+
+  startDate = (): PageElement => cy.get('#startDate')
+
+  endDate = (): PageElement => cy.get('#endDate')
 }

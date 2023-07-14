@@ -34,6 +34,21 @@ const stubDeviceWearers = () => {
   })
 }
 
+const catchAll = () => {
+  return stubFor({
+    priority: 1000,
+    request: {
+      method: 'GET',
+      urlPattern: `.*`,
+    },
+    response: {
+      status: 501,
+      headers: {
+        'Content-Type': 'application/json;',
+      },
+    },
+  })
+}
 const stubDeviceWearersEmptyResponse = () => {
   return stubFor({
     request: {
@@ -57,7 +72,7 @@ const stubDeviceWearer = () => {
   return stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/device-wearers/v1/id/3fc55bb7-ba52-4854-be96-661f710328fc',
+      urlPattern: '/device-wearers/v1/id/.*',
     },
     response: {
       status: 200,
@@ -144,7 +159,7 @@ const stubDevicesEmptyResponse = () => {
   return stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/devices/v1/device-wearer-id/3fc55bb7-ba52-4854-be96-661f710328fc',
+      urlPattern: '/devices/v1/device-wearer-id/.*',
     },
     response: {
       status: 200,
@@ -241,17 +256,23 @@ const stubLocations = () => {
             longitude: 24.0,
             locationTime: '2002-10-31T01:30:00.000-00:00',
           },
+          {
+            id: 4,
+            latitude: 25.0,
+            longitude: 25.0,
+            locationTime: '2003-10-31T01:30:00.000-00:00',
+          },
         ],
       },
     },
   })
 }
 
-const stubLocationsWithDateStartDate = (startDate: string, endDate: string) => {
+const stubLocationsWithDateStartDate = () => {
   return stubFor({
     request: {
       method: 'GET',
-      urlPattern: `/locations/v1/search-by-time-and-device?deviceId=d064e527-284d-4fc0-bda7-6295f1f7c8f4&startDate=${startDate}&endDate=${endDate}`,
+      urlPattern: `/locations/v1/search-by-time-and-device.*`,
     },
     response: {
       status: 200,
@@ -272,6 +293,12 @@ const stubLocationsWithDateStartDate = (startDate: string, endDate: string) => {
             latitude: 24.0,
             longitude: 24.0,
             locationTime: '2002-10-31T01:30:00.000-00:00',
+          },
+          {
+            id: 4,
+            latitude: 25.0,
+            longitude: 25.0,
+            locationTime: '2003-10-31T01:30:00.000-00:00',
           },
         ],
       },
@@ -310,4 +337,5 @@ export default {
   stubLocations,
   stubLocationsWithDateStartDate,
   stubLocationsEmptyResponse,
+  catchAll,
 }
