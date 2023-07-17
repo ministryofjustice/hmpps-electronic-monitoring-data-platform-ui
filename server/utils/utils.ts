@@ -1,3 +1,5 @@
+import { SanitisedError } from '../sanitisedError'
+
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
 
@@ -22,6 +24,26 @@ export const initialiseName = (fullName?: string): string | null => {
   return `${array[0][0]}. ${array.reverse()[0]}`
 }
 
-export type ApiResponse<K extends string, T> = { error: string } & {
-  [k in K]: T
+export type ApiResponse<K extends string, T> = Prettify<
+  { error: string } & {
+    [k in K]: T
+  }
+>
+
+export type Prettify<T> = {
+  [K in keyof T]: T[K]
+} & object
+
+export const AddYears = (years: number, date: Date): Date => {
+  const YearOffset = 1000 * 60 * 60 * 24 * 365
+  const tempDate = new Date()
+  tempDate.setTime(date.getTime() + YearOffset * years)
+  return tempDate
+}
+
+export const isSanitisedError = (error: unknown): error is SanitisedError => {
+  if (typeof error === 'string') {
+    return false
+  }
+  return Object.prototype.hasOwnProperty.call(error, 'text')
 }

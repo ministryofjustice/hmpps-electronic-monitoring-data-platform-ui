@@ -8,13 +8,15 @@ describe('location service', () => {
   let fakeDataPlatformApi: nock.Scope
   const dummyData: Location[] = [
     {
-      latitude: '20.0',
-      longitude: '20.0',
+      id: 1,
+      latitude: 20.0,
+      longitude: 20.0,
       locationTime: '2023:12:12T12:34:00',
     },
     {
-      latitude: '20.0',
-      longitude: '20.0',
+      id: 2,
+      latitude: 20.0,
+      longitude: 20.0,
       locationTime: '2023:12:12T12:34:00',
     },
   ]
@@ -27,21 +29,20 @@ describe('location service', () => {
   describe('findByDeviceId', () => {
     const deviceId = '123456789'
     const accessToken = ''
-    const endpointUrl = `/location/v1/device-id/${deviceId}`
-    it('should call API to get all locations for device Id', async () => {
+    const endpointUrl = `/locations/v1/device-id/${deviceId}`
+    const startDate = ''
+    const endDate = ''
+    it('should call API to get all locations for device Id when start and endDate are empty', async () => {
       const expected = dummyData
-      let called = 0
 
       fakeDataPlatformApi.get(endpointUrl).reply(200, () => {
-        called += 1
-        return { error: '', location: dummyData }
+        return { error: '', locations: dummyData }
       })
 
-      const result = await service.findByDeviceId(accessToken, deviceId)
+      const result = await service.findByDeviceIdAndDateRange(accessToken, deviceId, startDate, endDate)
 
       expect(result).toEqual(expected)
       expect(fakeDataPlatformApi.isDone()).toBeTruthy()
-      expect(called).toBe(1)
     })
     it('should throw for a 400 api response', async () => {
       expect.assertions(2)
@@ -50,23 +51,20 @@ describe('location service', () => {
 
       const expectedError = `Unable to find locations for ${deviceId}`
       const expected = new Error(expectedError)
-      const result = service.findByDeviceId('', deviceId)
+      const result = service.findByDeviceIdAndDateRange('', deviceId, startDate, endDate)
 
       await expect(result).rejects.toMatchObject(expected)
       expect(fakeDataPlatformApi.isDone()).toBeTruthy()
     })
     it('should be okay for no devices to be returned', async () => {
       const expected: Location[] = []
-      let called = 0
       fakeDataPlatformApi.get(endpointUrl).reply(200, () => {
-        called += 1
-        return { error: '', location: [] }
+        return { error: '', locations: [] }
       })
-      const result = await service.findByDeviceId(accessToken, deviceId)
+      const result = await service.findByDeviceIdAndDateRange(accessToken, deviceId, startDate, endDate)
 
       expect(result).toEqual(expected)
       expect(fakeDataPlatformApi.isDone()).toBeTruthy()
-      expect(called).toBe(1)
     })
   })
 })
